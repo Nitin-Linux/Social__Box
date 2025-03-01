@@ -57,15 +57,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check
 echo -e "$nc"
 if [ $check = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
@@ -78,15 +78,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check2
 echo -e "$nc"
 if [ $check2 = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check2 = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check2 = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check2 = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check2 = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
@@ -105,15 +105,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check3
 echo -e "$nc"
 if [ $check3 = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check3 = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check3 = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check3 = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check3 = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
@@ -132,15 +132,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check4
 echo -e "$nc"
 if [ $check4 = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check4 = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check4 = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check4 = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check4 = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
@@ -159,15 +159,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check5
 echo -e "$nc"
 if [ $check5 = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
@@ -186,15 +186,15 @@ echo -e "$red"
 read -p "Wanna Back To Main Menu [ Y / n ] : " check5
 echo -e "$nc"
 if [ $check5 = "Y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "y" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "Yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "yes" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 elif [ $check5 = "YES" ]; then
-cd .. && bash SocialBox.sh
+cd .. && bash Social__Box.sh
 else
 exit 1
 fi
