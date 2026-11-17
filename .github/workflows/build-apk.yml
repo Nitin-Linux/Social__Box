@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'vibe/gw-fixes-cbb2e3']
     paths:
       - 'android/**'
       - '.github/workflows/build-apk.yml'
