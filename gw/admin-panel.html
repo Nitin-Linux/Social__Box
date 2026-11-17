@@ -67,6 +67,9 @@
         </div>
       </div>
       <div class="flex items-center gap-space-sm shrink-0">
+        <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setRazorpayKey()">
+          <span class="material-symbols-outlined text-[16px]">payments</span><span>RZP Key</span>
+        </button>
         <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="adminExit()">
           <span class="material-symbols-outlined text-[16px]">logout</span><span>Exit</span>
         </button>
@@ -858,6 +861,24 @@
     </div>
   </div>
 </div>
+<div id="crop-modal" class="hidden fixed inset-0 z-[90] items-center justify-center bg-black/85 p-4">
+  <div class="w-full max-w-md bg-surface-container rounded-xl p-4 space-y-3 shadow-2xl">
+    <div class="flex items-center justify-between">
+      <span class="font-headline-sm text-[14px] font-bold text-on-surface uppercase tracking-wider">Crop Thumbnail</span>
+      <button onclick="hideModal('crop-modal')" class="w-8 h-8 rounded-full bg-surface-container-high text-tertiary hover:text-white flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[16px]">close</span></button>
+    </div>
+    <p class="font-label-sm text-[11px] text-tertiary">Fixed output: 1280&times;720 (16:9) &bull; Photo ko drag karke set karo, zoom buttons/slider se adjust karo</p>
+    <div id="crop-viewport" class="w-full rounded-lg overflow-hidden bg-black touch-none select-none" style="aspect-ratio:16/9;cursor:grab">
+      <canvas id="crop-canvas" class="w-full h-full block"></canvas>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="cropZoom(-1)" class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center shrink-0" type="button"><span class="material-symbols-outlined text-[18px]">zoom_out</span></button>
+      <input id="crop-zoom-range" type="range" min="0" max="100" value="0" class="flex-1 accent-[#e10111]" oninput="zoomFromRange(this.value)">
+      <button onclick="cropZoom(1)" class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center shrink-0" type="button"><span class="material-symbols-outlined text-[18px]">zoom_in</span></button>
+    </div>
+    <button onclick="applyCrop()" class="w-full py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-headline-sm text-[12px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all" type="button">Crop &amp; Use Thumbnail</button>
+  </div>
+</div>
 <script>
 /* Access sirf index.html ke admin login se milne wale verified session token se hota hai. */
 
@@ -1052,12 +1073,7 @@ function onFormImagePick(input){
   var f = input.files && input.files[0];
   if(!f) return;
   document.getElementById('tf-image-name').innerText = f.name;
-  fileToDataUrl(f, 1000, function(url){
-    formImageData = url;
-    var pv = document.getElementById('form-tournament-preview');
-    pv.src = url; pv.classList.remove('hidden');
-    document.getElementById('form-tournament-placeholder').classList.add('hidden');
-  });
+  openCropModal(f);
 }
 function readTournamentForm(){
   var name = document.getElementById('tf-name').value.trim();
@@ -1914,6 +1930,121 @@ function creditWinners(tid, winners){
 
 /* ---------------- boot ---------------- */
 document.addEventListener('DOMContentLoaded', init);
+
+/* ---------------- razorpay key setting ---------------- */
+function setRazorpayKey(){
+  if(!db) return toast('Firebase missing','warning');
+  db.ref('settings/razorpayKeyId').once('value').then(function(snap){
+    var cur = snap.val() || '';
+    var v = prompt('Razorpay Key ID daalo (rzp_test_xxx ya rzp_live_xxx):\nKhali chhodke OK dabao to key hat jayegi (deposits manual approval par chalenge).', cur);
+    if(v === null) return;
+    v = String(v).trim();
+    if(!v){
+      db.ref('settings/razorpayKeyId').remove().then(function(){ toast('Razorpay key hatadi — deposits ab manual approval se','info'); });
+      return;
+    }
+    db.ref('settings/razorpayKeyId').set(v).then(function(){ toast('Razorpay key save ho gayi \u2713 Ab deposits instant ho sakte hain'); });
+  }).catch(function(e){ toast('Error: '+e.message,'error'); });
+}
+
+/* ---------------- thumbnail crop (fixed 1280x720, 16:9) ---------------- */
+var CROP_OUT_W = 1280, CROP_OUT_H = 720;
+var crop = { img: null, scale: 1, minScale: 1, x: 0, y: 0, drag: null };
+function openCropModal(file){
+  var r = new FileReader();
+  r.onload = function(){
+    var img = new Image();
+    img.onload = function(){
+      crop.img = img;
+      showModal('crop-modal');
+      requestAnimationFrame(function(){ fitCrop(); });
+    };
+    img.src = r.result;
+  };
+  r.readAsDataURL(file);
+}
+function cropViewportEl(){ return document.getElementById('crop-viewport'); }
+function fitCrop(){
+  var vp = cropViewportEl(); if(!vp || !crop.img) return;
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var base = Math.max(vw / crop.img.width, vh / crop.img.height);
+  crop.minScale = base;
+  crop.scale = base;
+  crop.x = (vw - crop.img.width * base) / 2;
+  crop.y = (vh - crop.img.height * base) / 2;
+  syncZoomRange();
+  drawCrop();
+}
+function clampCrop(){
+  var vp = cropViewportEl(); if(!vp || !crop.img) return;
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var iw = crop.img.width * crop.scale, ih = crop.img.height * crop.scale;
+  if(iw <= vw){ crop.x = (vw - iw) / 2; } else { crop.x = Math.min(0, Math.max(vw - iw, crop.x)); }
+  if(ih <= vh){ crop.y = (vh - ih) / 2; } else { crop.y = Math.min(0, Math.max(vh - ih, crop.y)); }
+}
+function drawCrop(){
+  var vp = cropViewportEl(); if(!vp) return;
+  var c = document.getElementById('crop-canvas'); if(!c) return;
+  clampCrop();
+  c.width = vp.clientWidth; c.height = vp.clientHeight;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, c.width, c.height);
+  if(crop.img) ctx.drawImage(crop.img, crop.x, crop.y, crop.img.width * crop.scale, crop.img.height * crop.scale);
+}
+function syncZoomRange(){
+  var r = document.getElementById('crop-zoom-range'); if(!r || !crop.minScale) return;
+  r.value = Math.round(Math.min(100, Math.max(0, (crop.scale / crop.minScale - 1) / 5 * 100)));
+}
+function cropZoom(dir){
+  if(!crop.img) return;
+  var ns = Math.min(Math.max(crop.scale * (dir > 0 ? 1.15 : 0.87), crop.minScale), crop.minScale * 6);
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var k = ns / crop.scale;
+  crop.x = vw / 2 - (vw / 2 - crop.x) * k;
+  crop.y = vh / 2 - (vh / 2 - crop.y) * k;
+  crop.scale = ns;
+  syncZoomRange();
+  drawCrop();
+}
+function zoomFromRange(v){
+  if(!crop.img || !crop.minScale) return;
+  var ns = Math.min(Math.max(crop.minScale * (1 + (Number(v) || 0) / 100 * 5), crop.minScale), crop.minScale * 6);
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var k = ns / crop.scale;
+  crop.x = vw / 2 - (vw / 2 - crop.x) * k;
+  crop.y = vh / 2 - (vh / 2 - crop.y) * k;
+  crop.scale = ns;
+  drawCrop();
+}
+function applyCrop(){
+  if(!crop.img) return;
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var c = document.createElement('canvas');
+  c.width = CROP_OUT_W; c.height = CROP_OUT_H;
+  var ctx = c.getContext('2d');
+  var sx = (0 - crop.x) / crop.scale, sy = (0 - crop.y) / crop.scale;
+  var sw = vw / crop.scale, sh = vh / crop.scale;
+  ctx.drawImage(crop.img, sx, sy, sw, sh, 0, 0, CROP_OUT_W, CROP_OUT_H);
+  formImageData = c.toDataURL('image/jpeg', 0.82);
+  var pv = document.getElementById('form-tournament-preview');
+  pv.src = formImageData; pv.classList.remove('hidden');
+  document.getElementById('form-tournament-placeholder').classList.add('hidden');
+  hideModal('crop-modal');
+  toast('Thumbnail cropped \u2713 (1280x720)','crop');
+}
+(function(){
+  var vp = document.getElementById('crop-viewport'); if(!vp) return;
+  var st = null;
+  vp.addEventListener('pointerdown', function(e){ if(!crop.img) return; st = { px: e.clientX, py: e.clientY, x: crop.x, y: crop.y }; try{ vp.setPointerCapture(e.pointerId); }catch(err){} e.preventDefault(); });
+  vp.addEventListener('pointermove', function(e){ if(!st) return; crop.x = st.x + (e.clientX - st.px); crop.y = st.y + (e.clientY - st.py); drawCrop(); });
+  vp.addEventListener('pointerup', function(){ st = null; });
+  vp.addEventListener('pointercancel', function(){ st = null; });
+  vp.addEventListener('wheel', function(e){ e.preventDefault(); cropZoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  window.addEventListener('resize', function(){ if(crop.img && !document.getElementById('crop-modal').classList.contains('hidden')) fitCrop(); });
+})();
 </script>
 </body>
 </html>
