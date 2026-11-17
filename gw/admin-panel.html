@@ -1448,11 +1448,13 @@ function approveDeposit(id){
   if(d.status && d.status!=='pending') return toast('Double approval blocked: ye deposit already processed hai','shield');
   if(!confirm('Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nPaise wallet mein automatically add honge.')) return;
   db.ref('deposits/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'processing';
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked: already processed','shield'); return; }
+    if(!res.snapshot.val()){ toast('Deposit record DB me nahi mila','error'); return; }
     var dep = res.snapshot.val() || d;
     var txId = 'DEP_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1474,7 +1476,8 @@ function rejectDeposit(id){
   if(d.status && d.status!=='pending') return toast('Ye deposit already processed hai','shield');
   if(!confirm('Reject this deposit request?')) return;
   db.ref('deposits/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'rejected'; cur.processedAt = Date.now();
     return cur;
   }).then(function(res){
@@ -1577,11 +1580,13 @@ function confirmPayoutApprove(){
   var utr = document.getElementById('um-utr').value.trim();
   if(!utr) return toast('UTR / Bank Ref enter karein','warning');
   db.ref('payouts/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'paid'; cur.utr = utr; cur.paidAt = Date.now(); cur.uniqueId = 'PO_'+id;
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked','shield'); return; }
+    if(!res.snapshot.val()){ toast('Payout record DB me nahi mila','error'); return; }
     var po = res.snapshot.val() || p;
     var txId = 'PO_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1602,11 +1607,13 @@ function rejectPayout(id){
   if(reason===null) return;
   if(!confirm('Reject payout '+fmt(p.amount)+' and refund to user wallet?')) return;
   db.ref('payouts/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'rejected'; cur.rejectReason = reason; cur.processedAt = Date.now(); cur.uniqueId = 'POR_'+id;
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Already processed','shield'); return; }
+    if(!res.snapshot.val()){ toast('Payout record DB me nahi mila','error'); return; }
     var txId = 'POR_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
       if(cur) return;
