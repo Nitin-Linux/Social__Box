@@ -429,7 +429,7 @@
       const allUsersSnap=await get(ref(db,'users'));
       const allUsers=allUsersSnap.val()||{};
       const uidDigits=gameUID.replace(/\D/g,'');
-      const taken=Object.keys(allUsers).some(k => String((allUsers[k]||{}).gameUID||'').replace(/\D/g,'')===uidDigits);
+      const taken=Object.keys(allUsers).some(k => {const x=allUsers[k]||{};const g=String(x.gameUID||'').replace(/\D/g,'');const o=/^\d+$/.test(String(x.uid||''))?String(x.uid):'';return (g&&g===uidDigits)||(o&&o===uidDigits);});
       if (taken) {
         showMessage('Ye Game UID pehle se registered hai — ek Game UID se sirf ek account ban sakta hai.');
         button.disabled=false; button.innerHTML=original; return;
