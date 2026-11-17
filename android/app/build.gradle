@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.gwesports.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.gwesports.app'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    signingConfigs {
+        gw {
+            storeFile file('../gw.keystore')
+            storePassword 'gwesports2026'
+            keyAlias 'gwkey'
+            keyPassword 'gwesports2026'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.gw
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
