@@ -1,6 +1,7 @@
 package com.gwesports.app;
 
 import android.app.Dialog;
+import android.os.Message;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
