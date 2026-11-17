@@ -25,11 +25,11 @@ public class MainActivity extends Activity implements com.razorpay.PaymentResult
         s.setSupportMultipleWindows(true);
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         s.setTextZoom(100);
-        s.setInitialScale(0);
 
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, true);
 
+        web.setInitialScale(0);
         web.setWebViewClient(new GWWebViewClient());
         web.setWebChromeClient(new GWWebChromeClient());
         web.addJavascriptInterface(new GWPaymentBridge(this), "GWAndroid");
