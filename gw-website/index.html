@@ -20,13 +20,26 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "GW eSPORTS",
-      "alternateName": ["GW eSports", "gwesports", "GW Esports"],
-      "url": "https://gwesports.vercel.app/",
-      "logo": "https://gwesports.vercel.app/logo.png",
-      "description": "India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly.",
-      "sameAs": []
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://gwesports.vercel.app/#org",
+          "name": "GW eSPORTS",
+          "alternateName": ["GW eSports", "gwesports", "gwesport", "GW Esports", "GW eSport", "gw esports", "gw esport"],
+          "url": "https://gwesports.vercel.app/",
+          "logo": "https://gwesports.vercel.app/logo.png",
+          "description": "India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly.",
+          "sameAs": []
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://gwesports.vercel.app/#website",
+          "name": "GW eSPORTS",
+          "alternateName": "gwesports",
+          "url": "https://gwesports.vercel.app/",
+          "publisher": { "@id": "https://gwesports.vercel.app/#org" }
+        }
+      ]
     }
     </script>
     <meta name="theme-color" content="#050810" />
