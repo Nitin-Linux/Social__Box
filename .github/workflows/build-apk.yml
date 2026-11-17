@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -36,6 +38,7 @@ jobs:
         run: |
           cp android/app/build/outputs/apk/release/app-release.apk "gw-website/Gw esports.apk"
           cp android/app/build/outputs/apk/release/app-release.apk "gw-apk/Gw esports.apk"
+          git pull --rebase origin "$GITHUB_REF_NAME"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "gw-website/Gw esports.apk" "gw-apk/Gw esports.apk"
