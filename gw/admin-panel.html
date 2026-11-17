@@ -919,6 +919,32 @@ function fmt(n){ n = Number(n)||0; return '\u20B9' + n.toLocaleString('en-IN'); 
 function initials(s){ s = String(s||'U').trim(); return s.charAt(0).toUpperCase(); }
 function timeAgo(ts){ if(!ts) return '\u2014'; var d = Date.now()-ts; var m = Math.floor(d/60000); if(m<1) return 'just now'; if(m<60) return m+'m ago'; var h=Math.floor(m/60); if(h<24) return h+'h ago'; return new Date(ts).toLocaleDateString('en-IN'); }
 function toast(msg, icon){ var b=document.getElementById('toast-banner'); var t=document.getElementById('toast-text'); var i=document.getElementById('toast-icon'); if(!b) return; t.innerText = msg; i.innerText = icon || 'verified'; b.classList.remove('hidden'); clearTimeout(b._t); b._t = setTimeout(function(){ b.classList.add('hidden'); }, 4000); }
+function gwAsk(opts){ return new Promise(function(resolve){
+  var m = document.getElementById('gw-ask-modal');
+  if(!m){
+    m = document.createElement('div'); m.id = 'gw-ask-modal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);padding:16px;';
+    m.innerHTML = '<div style="background:#1c1b1c;border:1px solid #3a393b;border-radius:14px;max-width:340px;width:100%;padding:18px;font-family:Inter,Arial,sans-serif;color:#e5e2e3;box-shadow:0 10px 40px rgba(0,0,0,0.7)">'
+      + '<div id="gw-ask-title" style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;color:#ffb1ab"></div>'
+      + '<div id="gw-ask-msg" style="font-size:13px;line-height:1.5;color:#c9c6c7;margin-bottom:12px;white-space:pre-line"></div>'
+      + '<input id="gw-ask-input" style="display:none;width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #5f3f3b;background:#131314;color:#e5e2e3;font-size:14px;margin-bottom:12px"/>'
+      + '<div style="display:flex;gap:8px;justify-content:flex-end"><button id="gw-ask-cancel" style="padding:9px 14px;border-radius:8px;border:1px solid #5f3f3b;background:#252527;color:#e5e2e3;font-size:12px;font-weight:700;text-transform:uppercase">Cancel</button>'
+      + '<button id="gw-ask-ok" style="padding:9px 14px;border-radius:8px;border:0;background:#e10111;color:#fff;font-size:12px;font-weight:700;text-transform:uppercase">OK</button></div></div>';
+    document.body.appendChild(m);
+  }
+  document.getElementById('gw-ask-title').textContent = opts.title || 'Confirm';
+  document.getElementById('gw-ask-msg').textContent = opts.msg || '';
+  var inp = document.getElementById('gw-ask-input');
+  if(opts.input !== undefined){ inp.style.display = 'block'; inp.value = opts.input; } else { inp.style.display = 'none'; inp.value = ''; }
+  m.style.display = 'flex';
+  var ok = document.getElementById('gw-ask-ok'), cancel = document.getElementById('gw-ask-cancel');
+  ok.textContent = opts.okLabel || 'OK';
+  function close(v){ m.style.display = 'none'; ok.onclick = null; cancel.onclick = null; inp.onkeydown = null; resolve(v); }
+  ok.onclick = function(){ close(opts.input !== undefined ? inp.value.trim() : true); };
+  cancel.onclick = function(){ close(opts.input !== undefined ? null : false); };
+  inp.onkeydown = function(e){ if(e.key === 'Enter') ok.onclick(); };
+  if(opts.input !== undefined){ setTimeout(function(){ inp.focus(); inp.select(); }, 50); }
+});}
 function copyText(txt){ navigator.clipboard.writeText(txt).then(function(){ toast('Copied: '+txt,'content_copy'); }).catch(function(){}); }
 function hideModal(id){ var m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); }
 function showModal(id){ var m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); }
@@ -1089,14 +1115,14 @@ function saveCategory(){
     r.readAsDataURL(f);
   });
 })();
-function editCategory(id){
+async function editCategory(id){
   var c = state.categories[id]; if(!c) return;
-  var n = prompt('Category ka naya naam:', c.name);
+  var n = await gwAsk({title:'Rename Category', msg:'Category ka naya naam:', input:c.name, okLabel:'Save'});
   if(n && n.trim()){ db.ref('categories/'+id).update({name:n.trim()}).then(function(){ toast('Category updated'); }); }
 }
-function deleteCategory(id){
+async function deleteCategory(id){
   var c = state.categories[id]; if(!c) return;
-  if(!confirm('Delete category "'+c.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Category', msg:'Delete category "'+c.name+'"?', okLabel:'Delete'}))) return;
   db.ref('categories/'+id).remove().then(function(){ toast('Category deleted','delete'); });
 }
 function emptyState(icon, msg){
@@ -1216,9 +1242,9 @@ function resetTournamentForm(){
   document.getElementById('btn-save-tournament-label').innerText='Publish Tournament';
   document.getElementById('btn-cancel-tournament-edit').classList.add('hidden');
 }
-function deleteTournament(id){
+async function deleteTournament(id){
   var t = state.tournaments[id]; if(!t) return;
-  if(!confirm('Delete tournament "'+t.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Tournament', msg:'Delete tournament "'+t.name+'"?', okLabel:'Delete'}))) return;
   db.ref('tournaments/'+id).remove().then(function(){ toast('Tournament deleted','delete'); });
 }
 function setTournamentStatus(id, status){ db.ref('tournaments/'+id+'/status').set(status).then(function(){ toast('Status: '+status.toUpperCase(),'sync'); }); }
@@ -1334,9 +1360,9 @@ function resetMatchForm(){
   document.getElementById('btn-save-match-label').innerText='Publish Match';
   document.getElementById('btn-cancel-match-edit').classList.add('hidden');
 }
-function deleteMatch(id){
+async function deleteMatch(id){
   var m = state.matches[id]; if(!m) return;
-  if(!confirm('Delete match "'+m.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Match', msg:'Delete match "'+m.name+'"?', okLabel:'Delete'}))) return;
   db.ref('matches/'+id).remove().then(function(){ toast('Match deleted','delete'); });
 }
 function setMatchStatus(id, status){ db.ref('matches/'+id+'/status').set(status).then(function(){ toast('Match status: '+status.toUpperCase(),'sync'); }); }
@@ -1441,12 +1467,12 @@ function renderDeposits(){
   if(!list.length){ wrap.innerHTML = emptyState('receipt_long','Koi deposit request nahi mili.'); return; }
   wrap.innerHTML = list.map(function(e){ return depCard(e[0], e[1]); }).join('');
 }
-function approveDeposit(id){
+async function approveDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
   if(d.status && d.status!=='pending') return toast('Double approval blocked: ye deposit already processed hai','shield');
-  if(!confirm('Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nPaise wallet mein automatically add honge.')) return;
+  if(!(await gwAsk({title:'Approve Deposit', msg:'Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nPaise wallet mein automatically add honge.', okLabel:'Approve'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1469,12 +1495,12 @@ function approveDeposit(id){
       .catch(function(e){ toast('Error: '+e.message,'error'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
-function rejectDeposit(id){
+async function rejectDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
   if(d.status && d.status!=='pending') return toast('Ye deposit already processed hai','shield');
-  if(!confirm('Reject this deposit request?')) return;
+  if(!(await gwAsk({title:'Reject Deposit', msg:'Ye deposit request reject karni hai?', okLabel:'Reject'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1599,13 +1625,13 @@ function confirmPayoutApprove(){
     closeUtrModal();
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
-function rejectPayout(id){
+async function rejectPayout(id){
   var p = state.payouts[id];
   if(!p) return;
   if((p.status||'pending') !== 'pending') return toast('Ye payout already processed hai','shield');
-  var reason = prompt('Reject reason (user ko refund hoga):', 'Invalid UPI / Verification failed');
+  var reason = await gwAsk({title:'Reject & Refund', msg:'Reject reason (user ko refund hoga):', input:'Invalid UPI / Verification failed', okLabel:'Next'});
   if(reason===null) return;
-  if(!confirm('Reject payout '+fmt(p.amount)+' and refund to user wallet?')) return;
+  if(!(await gwAsk({title:'Confirm Refund', msg:'Reject payout '+fmt(p.amount)+' and refund to user wallet?', okLabel:'Yes, Refund'}))) return;
   db.ref('payouts/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1696,10 +1722,10 @@ function renderUsers(){
   if(!list.length){ wrap.innerHTML = emptyState('shield_person','Koi registered user nahi mila. User App se register hone par yahan dikhega.'); return; }
   wrap.innerHTML = list.map(function(e){ return userCard(e[0], e[1]); }).join('');
 }
-function toggleBan(id){
+async function toggleBan(id){
   var u = state.users[id]; if(!u) return;
   var to = !u.banned;
-  if(to && !confirm('Ban user "'+(u.username||id)+'"?')) return;
+  if(to && !(await gwAsk({title:'Ban User', msg:'Ban user "'+(u.username||id)+'"?', okLabel:'Ban'}))) return;
   db.ref('users/'+id+'/banned').set(to).then(function(){ toast(to?'User banned':'User unbanned', to?'block':'lock_open'); });
 }
 function viewUserTxns(uid){
@@ -1766,7 +1792,7 @@ function toggleMode(mode){
     addBtn.className = 'h-10 rounded-lg bg-surface-container text-outline font-label-sm text-label-sm font-semibold uppercase flex items-center justify-center gap-1.5 hover:text-on-surface';
   }
 }
-function applyWalletAdjustment(){
+async function applyWalletAdjustment(){
   var uid = state.walletUid;
   if(!uid) return;
   var u = state.users[uid]; if(!u) return;
@@ -1776,7 +1802,7 @@ function applyWalletAdjustment(){
   var mode = state.walletMode;
   var cur = Number((u.wallet||{})[ledger])||0;
   if(mode==='deduct' && amt>cur) return toast('Wallet mein itne paise nahi hain (Balance: '+cur+')','warning');
-  if(!confirm((mode==='add'?'Add ':'Deduct ')+fmt(amt)+' '+(ledger==='deposit'?'Deposit':'Winning')+' balance '+(mode==='add'?'to':'from')+' '+(u.username||uid)+'?')) return;
+  if(!(await gwAsk({title:'Confirm', msg:(mode==='add'?'Add ':'Deduct ')+fmt(amt)+' '+(ledger==='deposit'?'Deposit':'Winning')+' balance '+(mode==='add'?'to':'from')+' '+(u.username||uid)+'?', okLabel:'Confirm'}))) return;
   db.ref('users/'+uid+'/wallet/'+ledger).transaction(function(v){
     var val = Number(v)||0;
     return mode==='add' ? val+amt : Math.max(0, val-amt);
@@ -2053,9 +2079,9 @@ document.addEventListener('DOMContentLoaded', init);
 /* ---------------- razorpay key setting ---------------- */
 function setRazorpayKey(){
   if(!db) return toast('Firebase missing','warning');
-  db.ref('settings/razorpayKeyId').once('value').then(function(snap){
+  db.ref('settings/razorpayKeyId').once('value').then(async function(snap){
     var cur = snap.val() || '';
-    var v = prompt('Razorpay Key ID daalo (rzp_test_xxx ya rzp_live_xxx):\nKhali chhodke OK dabao to key hat jayegi (deposits manual approval par chalenge).', cur);
+    var v = await gwAsk({title:'Razorpay Key ID', msg:'Razorpay Key ID daalo (rzp_test_xxx ya rzp_live_xxx):\nKhali chhodke OK dabao to key hat jayegi (deposits manual approval par chalenge).', input:cur, okLabel:'Save'});
     if(v === null) return;
     v = String(v).trim();
     if(!v){
@@ -2069,9 +2095,9 @@ function setRazorpayKey(){
 /* ---------------- verify endpoint setting ---------------- */
 function setVerifyEndpoint(){
   if(!db) return toast('Firebase missing','warning');
-  db.ref('settings/verifyEndpoint').once('value').then(function(snap){
+  db.ref('settings/verifyEndpoint').once('value').then(async function(snap){
     var cur = snap.val() || '';
-    var v = prompt('Apps Script verify URL daalo (script.google.com se web app deploy karke jo /exec URL milta hai):\nKhali chhodke OK dabao to hat jayegi (deposits manual approve honge).', cur);
+    var v = await gwAsk({title:'Apps Script Verify URL', msg:'Apps Script verify URL daalo (script.google.com se web app deploy karke jo /exec URL milta hai):\nKhali chhodke OK dabao to hat jayegi (deposits manual approve honge).', input:cur, okLabel:'Save'});
     if(v === null) return;
     v = String(v).trim();
     if(!v){
