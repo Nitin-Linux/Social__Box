@@ -421,6 +421,20 @@
     const gameUID=$('gameuid').value.trim();
     const email=$('email').value.trim().toLowerCase();
     const password=signupPwd.value;
+    if (!/^\d{4,15}$/.test(gameUID)) {
+      showMessage('Game UID sirf numbers mein hona chahiye (4 se 15 digits).');
+      button.disabled=false; button.innerHTML=original; return;
+    }
+    try {
+      const allUsersSnap=await get(ref(db,'users'));
+      const allUsers=allUsersSnap.val()||{};
+      const uidDigits=gameUID.replace(/\D/g,'');
+      const taken=Object.keys(allUsers).some(k => String((allUsers[k]||{}).gameUID||'').replace(/\D/g,'')===uidDigits);
+      if (taken) {
+        showMessage('Ye Game UID pehle se registered hai — ek Game UID se sirf ek account ban sakta hai.');
+        button.disabled=false; button.innerHTML=original; return;
+      }
+    } catch (dupErr) { console.warn('Duplicate UID check skipped:', dupErr); }
     try {
       const credential=await createUserWithEmailAndPassword(auth,email,password);
       const uid=credential.user.uid;
