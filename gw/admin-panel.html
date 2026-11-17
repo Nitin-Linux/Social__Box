@@ -67,7 +67,10 @@
         </div>
       </div>
       <div class="flex items-center gap-space-sm shrink-0">
-        <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setRazorpayKey()">
+        <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setVerifyEndpoint()">
+          <span class="material-symbols-outlined text-[16px]">verified</span><span>Verify URL</span>
+        </button>
+        <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setRazorpayKey()">
           <span class="material-symbols-outlined text-[16px]">payments</span><span>RZP Key</span>
         </button>
         <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="adminExit()">
@@ -1944,6 +1947,22 @@ function setRazorpayKey(){
       return;
     }
     db.ref('settings/razorpayKeyId').set(v).then(function(){ toast('Razorpay key save ho gayi \u2713 Ab deposits instant ho sakte hain'); });
+  }).catch(function(e){ toast('Error: '+e.message,'error'); });
+}
+
+/* ---------------- verify endpoint setting ---------------- */
+function setVerifyEndpoint(){
+  if(!db) return toast('Firebase missing','warning');
+  db.ref('settings/verifyEndpoint').once('value').then(function(snap){
+    var cur = snap.val() || '';
+    var v = prompt('Apps Script verify URL daalo (script.google.com se web app deploy karke jo /exec URL milta hai):\nKhali chhodke OK dabao to hat jayegi (deposits manual approve honge).', cur);
+    if(v === null) return;
+    v = String(v).trim();
+    if(!v){
+      db.ref('settings/verifyEndpoint').remove().then(function(){ toast('Verify URL hatadi — deposits manual approval se','info'); });
+      return;
+    }
+    db.ref('settings/verifyEndpoint').set(v).then(function(){ toast('Verify URL save ho gayi \u2713 Ab deposits auto-verify honge'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
 
