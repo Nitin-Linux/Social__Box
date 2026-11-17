@@ -19,7 +19,7 @@ public class GWWebChromeClient extends WebChromeClient {
         s.setJavaScriptCanOpenWindowsAutomatically(true);
         s.setSupportMultipleWindows(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(popup, true);
-        popup.setWebViewClient(new WebViewClient());
+        popup.setWebViewClient(new GWWebViewClient());
         popup.setWebChromeClient(this);
 
         Dialog d = new Dialog(view.getContext());

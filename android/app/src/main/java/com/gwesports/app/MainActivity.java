@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, true);
 
-        web.setWebViewClient(new WebViewClient());
+        web.setWebViewClient(new GWWebViewClient());
         web.setWebChromeClient(new GWWebChromeClient());
         web.loadUrl(getString(R.string.app_url));
     }
