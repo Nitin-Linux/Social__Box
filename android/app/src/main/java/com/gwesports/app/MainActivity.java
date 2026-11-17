@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import org.json.JSONObject;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements com.razorpay.PaymentResultListener {
     private WebView web;
 
     @Override
@@ -30,7 +30,35 @@ public class MainActivity extends Activity {
 
         web.setWebViewClient(new GWWebViewClient());
         web.setWebChromeClient(new GWWebChromeClient());
+        web.addJavascriptInterface(new GWPaymentBridge(this), "GWAndroid");
+        try {
+            com.razorpay.Checkout.preload(getApplicationContext());
+        } catch (Exception ignored) {
+        }
         web.loadUrl(getString(R.string.app_url));
+    }
+
+    void onNativePayResult(final boolean ok, final String data) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (web == null) return;
+                try {
+                    web.evaluateJavascript("window.__gwNativePayResult&&window.__gwNativePayResult(" + ok + "," + JSONObject.quote(data == null ? "" : data) + ")", null);
+                } catch (Exception ignored) {
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentId) {
+        onNativePayResult(true, razorpayPaymentId == null ? "" : razorpayPaymentId);
+    }
+
+    @Override
+    public void onPaymentError(int code, String response) {
+        onNativePayResult(false, "Error code " + code + ": " + (response == null ? "" : response));
     }
 
     @Override

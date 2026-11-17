@@ -10,8 +10,8 @@ android {
         applicationId 'com.gwesports.app'
         minSdk 21
         targetSdk 34
-        versionCode 3
-        versionName '1.2'
+        versionCode 4
+        versionName '1.3'
     }
 
     signingConfigs {
@@ -34,4 +34,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+dependencies {
+    implementation 'com.razorpay:checkout:1.6.41'
 }

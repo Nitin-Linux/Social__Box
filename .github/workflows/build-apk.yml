@@ -35,9 +35,10 @@ jobs:
       - name: Publish APK to gw-website
         run: |
           cp android/app/build/outputs/apk/release/app-release.apk "gw-website/Gw esports.apk"
+          cp android/app/build/outputs/apk/release/app-release.apk "gw-apk/Gw esports.apk"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "gw-website/Gw esports.apk"
+          git add "gw-website/Gw esports.apk" "gw-apk/Gw esports.apk"
           if git diff --cached --quiet; then
             echo "No APK changes to commit"
           else
