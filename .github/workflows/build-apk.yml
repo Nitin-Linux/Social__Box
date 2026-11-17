@@ -36,6 +36,7 @@ jobs:
 
       - name: Publish APK to gw-website
         run: |
+          mkdir -p gw-apk
           cp android/app/build/outputs/apk/release/app-release.apk "gw-website/Gw esports.apk"
           cp android/app/build/outputs/apk/release/app-release.apk "gw-apk/Gw esports.apk"
           git pull --rebase origin "$GITHUB_REF_NAME"
