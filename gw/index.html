@@ -161,7 +161,7 @@
 <div class="w-12 h-12 flex items-center justify-center text-on-surface-variant pointer-events-none">
 <span class="material-symbols-outlined text-[20px]">mail</span>
 </div>
-<input autocomplete="email" class="flex-1 bg-transparent pr-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none" id="emailInput" placeholder="name@domain.com" required="" type="text"/>
+<input autocomplete="email" class="flex-1 bg-transparent pr-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none" id="emailInput" placeholder="Email" autocomplete="username" required="" type="text"/>
 </div>
 </div>
 <!-- Password Field Container -->
@@ -254,7 +254,7 @@
 <div class="w-12 h-full flex items-center justify-center text-on-surface-variant">
 <span class="material-symbols-outlined text-[20px]">sports_esports</span>
 </div>
-<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="gamertag" placeholder="e.g. ApexViper" required="" type="text"/>
+<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="gamertag" placeholder="Game Name" required="" type="text"/>
 </div>
 </div>
 <div class="flex flex-col gap-1">
@@ -265,7 +265,7 @@
 <div class="w-12 h-full flex items-center justify-center text-on-surface-variant">
 <span class="material-symbols-outlined text-[20px]">badge</span>
 </div>
-<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="gameuid" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 9942158741" required="" type="text"/>
+<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="gameuid" inputmode="numeric" pattern="[0-9]*" placeholder="Game UID" required="" type="text"/>
 </div>
 </div>
 <div class="flex flex-col gap-1">
@@ -276,7 +276,7 @@
 <div class="w-12 h-full flex items-center justify-center text-on-surface-variant">
 <span class="material-symbols-outlined text-[20px]">alternate_email</span>
 </div>
-<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="email" placeholder="player@esports.com" required="" type="email"/>
+<input class="w-full h-full bg-transparent pr-4 font-body-md text-body-md text-on-surface placeholder:text-surface-container-highest focus:outline-none" id="email" placeholder="Email" autocomplete="username" required="" type="email"/>
 </div>
 </div>
 <div class="flex flex-col gap-1">
@@ -458,6 +458,19 @@
   const ADMIN_EMAIL='gwsarkarr';
   const ADMIN_PASSWORD='gwhunterr';
 
+  // Remember device: prefill saved email and persist on toggle.
+  const rememberBox=$('rememberDevice');
+  const savedEmail=localStorage.getItem('gwRememberEmail')||'';
+  if (savedEmail) {
+    const ei=$('emailInput');
+    if (ei) ei.value=savedEmail;
+    if (rememberBox) rememberBox.checked=true;
+  }
+  rememberBox?.addEventListener('change', () => {
+    if (rememberBox.checked) localStorage.setItem('gwRememberEmail', $('emailInput').value.trim());
+    else localStorage.removeItem('gwRememberEmail');
+  });
+
   // Login with Firebase Authentication and verify the corresponding RTDB profile.
   const loginForm=$('authForm');
   loginForm?.addEventListener('submit', async event => {
@@ -497,6 +510,10 @@
         showMessage('Login succeeded, but player profile is missing in Realtime Database. Contact the project admin.');
       } else {
         const profile=snapshot.val() || {};
+        if (rememberBox) {
+          if (rememberBox.checked) localStorage.setItem('gwRememberEmail', email);
+          else localStorage.removeItem('gwRememberEmail');
+        }
         showMessage(`Welcome back, ${profile.gameName || 'Player'}! Opening user panel...`, 'success');
         setTimeout(() => { window.location.href='user-panel.html'; }, 800);
       }
