@@ -44,7 +44,10 @@ public class MainActivity extends Activity implements com.razorpay.PaymentResult
             public void run() {
                 if (web == null) return;
                 try {
-                    web.evaluateJavascript("window.__gwNativePayResult&&window.__gwNativePayResult(" + ok + "," + JSONObject.quote(data == null ? "" : data) + ")", null);
+                    String payload = ok
+                            ? "{ok:true,paymentId:" + JSONObject.quote(data == null ? "" : data) + "}"
+                            : "{ok:false,error:" + JSONObject.quote(data == null ? "" : data) + "}";
+                    web.evaluateJavascript("window.__gwNativePayResult&&window.__gwNativePayResult(" + payload + ")", null);
                 } catch (Exception ignored) {
                 }
             }
