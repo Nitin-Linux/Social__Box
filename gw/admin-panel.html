@@ -1896,8 +1896,10 @@ function removeWinnerRow(i){
 }
 function setWinnerUid(i, uid){
   var u = state.users[uid];
+  var wt = state.tournaments[state.winnerTid]||{};
+  var p = (wt.participants && wt.participants[uid]) || {};
   state.winnerRows[i].uid = uid;
-  state.winnerRows[i].tag = u ? u.username : '';
+  state.winnerRows[i].tag = (p && p.gameName) || (p && p.ign) || (u ? (u.gameName || u.ign || u.username) : '') || '';
   renderWinnerRows(); updatePreviewLabel();
 }
 function setWinnerAmount(i, val){ state.winnerRows[i].amount = Number(val)||0; updatePreviewLabel(); }
@@ -1909,7 +1911,15 @@ function posLabel(pos){
 }
 function renderWinnerRows(){
   var wrap = document.getElementById('wm-winners-list');
-  var userOpts = Object.keys(state.users).map(function(k){ return '<option value="'+esc(k)+'">'+esc((state.users[k].username||'USER')+' \u2022 '+(state.users[k].uid||k))+'</option>'; }).join('');
+  var wt = state.tournaments[state.winnerTid]||{};
+  var wparts = (wt.participants && typeof wt.participants==='object') ? wt.participants : {};
+  var userOpts = Object.keys(wparts).map(function(pk){
+    var p = wparts[pk]||{}; var u = state.users[pk]||{};
+    var nm = p.gameName || p.ign || u.gameName || u.ign || u.username || 'USER';
+    var gu = p.gameUID || u.gameUID || (/^\d+$/.test(String(u.uid||'')) ? String(u.uid) : pk);
+    return '<option value="'+esc(pk)+'">'+esc(nm+' \u2022 '+gu)+'</option>';
+  }).join('');
+  if(!userOpts) userOpts = '<option value="">\u2014 Is tournament me koi join nahi hua \u2014</option>';
   wrap.innerHTML = state.winnerRows.map(function(r, i){
     var first = i===0;
     var cardCls = first ? 'bg-surface-container-high p-3.5 rounded-xl flex flex-col gap-2.5 shadow-[inset_0_0_12px_rgba(255,180,171,0.06)]' : 'bg-surface-container-high p-3 rounded-xl flex flex-col gap-2';
