@@ -18,7 +18,7 @@
 <button aria-label="Region selector" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-95 transition-transform">
 <span class="material-symbols-outlined text-[20px]">public</span>
 </button>
-<button aria-label="Support &amp; FAQ" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-95 transition-transform">
+<button aria-label="Support &amp; FAQ" onclick="window.open('https://www.whatsapp.com/channel/0029VbE47GSFi8xb7nfj5k2v','_blank')" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-95 transition-transform">
 <span class="material-symbols-outlined text-[20px]">help</span>
 </button>
 </div>
@@ -38,7 +38,7 @@
 <div class="relative w-40 h-40 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-2xl p-4">
 <!-- Glow Backlight -->
 <div class="absolute inset-2 bg-secondary-container/15 rounded-xl filter blur-sm"></div>
-<img alt="GW eSports Shield Crest" class="relative w-full h-full object-contain filter drop-shadow-[0_0_18px_rgba(225,1,17,0.7)] transform transition-transform duration-300 hover:scale-105" src="./logo.png"/>
+<img alt="GW eSports Shield Crest" class="relative w-full h-full object-contain filter drop-shadow-[0_0_18px_rgba(225,1,17,0.7)] transform transition-transform duration-300 hover:scale-105" src="./logo.jpg"/>
 <!-- Tactical Corner Markers -->
 <span class="absolute top-1.5 left-1.5 text-secondary text-[10px] font-label-sm leading-none opacity-80">◤</span>
 <span class="absolute top-1.5 right-1.5 text-secondary text-[10px] font-label-sm leading-none opacity-80">◥</span>
@@ -133,7 +133,7 @@
 <span class="inline-block w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
 <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">Secure Node 04</span>
 </div>
-<button aria-label="Need Help" class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface hover:text-primary transition-colors focus:outline-none" type="button">
+<button aria-label="Need Help" onclick="window.open('https://www.whatsapp.com/channel/0029VbE47GSFi8xb7nfj5k2v','_blank')" class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface hover:text-primary transition-colors focus:outline-none" type="button">
 <span class="material-symbols-outlined text-[20px]">help_outline</span>
 </button>
 </header>
@@ -141,7 +141,7 @@
 <section class="flex flex-col items-center justify-center pt-2 pb-5">
 <div class="relative flex items-center justify-center p-3 rounded-2xl bg-surface-container-low shadow-xl">
 <div class="absolute inset-0 bg-secondary-container/10 rounded-2xl blur-lg pointer-events-none"></div>
-<img alt="GW Esports Championship Badge" class="relative w-20 h-20 object-contain drop-shadow-md select-none" src="./logo.png"/>
+<img alt="GW Esports Championship Badge" class="relative w-20 h-20 object-contain drop-shadow-md select-none" src="./logo.jpg"/>
 </div>
 <!-- Live Server Ticker Badge -->
 </section>
@@ -234,7 +234,7 @@
 <span class="material-symbols-outlined text-[22px]">arrow_back_ios_new</span>
 </button>
 <div class="flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-surface-container-low">
-<img alt="gw eSports" class="w-5 h-5 object-contain" src="./logo.png"/>
+<img alt="gw eSports" class="w-5 h-5 object-contain" src="./logo.jpg"/>
 <span class="font-label-sm text-label-sm tracking-widest text-primary uppercase">gw ID SYNC</span>
 </div>
 <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant">
@@ -421,6 +421,20 @@
     const gameUID=$('gameuid').value.trim();
     const email=$('email').value.trim().toLowerCase();
     const password=signupPwd.value;
+    if (!/^\d{4,15}$/.test(gameUID)) {
+      showMessage('Game UID sirf numbers mein hona chahiye (4 se 15 digits).');
+      button.disabled=false; button.innerHTML=original; return;
+    }
+    try {
+      const allUsersSnap=await get(ref(db,'users'));
+      const allUsers=allUsersSnap.val()||{};
+      const uidDigits=gameUID.replace(/\D/g,'');
+      const taken=Object.keys(allUsers).some(k => String((allUsers[k]||{}).gameUID||'').replace(/\D/g,'')===uidDigits);
+      if (taken) {
+        showMessage('Ye Game UID pehle se registered hai — ek Game UID se sirf ek account ban sakta hai.');
+        button.disabled=false; button.innerHTML=original; return;
+      }
+    } catch (dupErr) { console.warn('Duplicate UID check skipped:', dupErr); }
     try {
       const credential=await createUserWithEmailAndPassword(auth,email,password);
       const uid=credential.user.uid;
@@ -462,8 +476,22 @@
       const button=$('submitButton'), original=button.innerHTML;
       button.disabled=true;
       button.innerHTML='<span class="material-symbols-outlined animate-spin">refresh</span><span>Opening Admin...</span>';
-      showMessage('Admin access granted. Opening admin panel...', 'success');
-      setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
+      try {
+        const bytes=new Uint8Array(24);
+        crypto.getRandomValues(bytes);
+        const token=Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+        await set(ref(db, `adminSessions/${token}`), {
+          createdAt: Date.now(),
+          expiresAt: Date.now() + 12*60*60*1000
+        });
+        sessionStorage.setItem('gwAdminToken', token);
+        showMessage('Admin access granted. Opening admin panel...', 'success');
+        setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
+      } catch (sessionErr) {
+        console.error('Admin session failed:', sessionErr);
+        showMessage('Admin session create nahi hui — Firebase Database rules check karo.');
+        button.disabled=false; button.innerHTML=original;
+      }
       return;
     }
     if (!auth || !db) { showMessage('Firebase is not connected. Check firebase-config.js and reload.'); return; }
