@@ -645,6 +645,13 @@
         <input class="w-full bg-transparent font-body-md text-body-md text-on-surface outline-none" type="text" id="cat-name" placeholder="CS 1v1 (Clash Squad)">
       </div>
     </div>
+    <div class="flex flex-col gap-1">
+      <label class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Category Poster</label>
+      <div class="h-12 bg-surface-container-high rounded-lg px-3 flex items-center">
+        <input class="w-full bg-transparent font-body-md text-body-md text-on-surface outline-none text-xs" type="file" id="cat-poster" accept="image/*">
+      </div>
+      <img id="cat-poster-preview" class="hidden w-16 h-16 object-contain rounded-lg bg-surface-container-high mt-1" alt="poster preview">
+    </div>
     <button class="w-full h-12 bg-secondary-container text-on-secondary-container rounded-lg font-label-lg text-label-lg uppercase tracking-wider flex items-center justify-center gap-2 active:scale-98 transition-all shadow-[0_0_14px_rgba(225,1,17,0.5)]" type="button" onclick="saveCategory()">
       <span class="material-symbols-outlined text-[18px]">add</span>
       <span>Create Category</span>
@@ -1026,14 +1033,57 @@ function renderCategoryChips(){
   wrap.innerHTML = html;
 }
 function setCategoryFilter(id){ state.categoryFilter = id; renderCategoryChips(); renderTournaments(); }
+function compressCatImage(file, cb){
+  var r = new FileReader();
+  r.onload = function(){
+    var img = new Image();
+    img.onload = function(){
+      var max = 720, w = img.width, h = img.height;
+      if(w > max || h > max){ var s = Math.min(max/w, max/h); w = Math.round(w*s); h = Math.round(h*s); }
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', 0.82));
+    };
+    img.onerror = function(){ cb(''); };
+    img.src = r.result;
+  };
+  r.onerror = function(){ cb(''); };
+  r.readAsDataURL(file);
+}
 function saveCategory(){
   var name = document.getElementById('cat-name').value.trim();
   if(!name) return toast('Category name likhein','warning');
   if(!db) return toast('Firebase config missing','warning');
-  db.ref('categories').push({ name: name, createdAt: Date.now() })
-    .then(function(){ document.getElementById('cat-name').value=''; toast('Category created: '+name); })
-    .catch(function(e){ toast('Error: '+e.message,'error'); });
+  var fEl = document.getElementById('cat-poster');
+  var f = fEl && fEl.files && fEl.files[0];
+  var push = function(poster){
+    var rec = { name: name, createdAt: Date.now() };
+    if(poster) rec.poster = poster;
+    db.ref('categories').push(rec)
+      .then(function(){
+        document.getElementById('cat-name').value='';
+        if(fEl) fEl.value='';
+        var pv = document.getElementById('cat-poster-preview');
+        if(pv){ pv.src=''; pv.classList.add('hidden'); }
+        toast('Category created: '+name);
+      })
+      .catch(function(e){ toast('Error: '+e.message,'error'); });
+  };
+  if(f) compressCatImage(f, function(b64){ push(b64 || null); });
+  else push(null);
 }
+(function(){
+  var el = document.getElementById('cat-poster');
+  if(!el) return;
+  el.addEventListener('change', function(){
+    var pv = document.getElementById('cat-poster-preview');
+    var f = el.files && el.files[0];
+    if(!f || !pv){ if(pv){ pv.src=''; pv.classList.add('hidden'); } return; }
+    var r = new FileReader();
+    r.onload = function(){ pv.src = r.result; pv.classList.remove('hidden'); };
+    r.readAsDataURL(f);
+  });
+})();
 function editCategory(id){
   var c = state.categories[id]; if(!c) return;
   var n = prompt('Category ka naya naam:', c.name);
@@ -1060,8 +1110,10 @@ function renderCategories(){
     var tn = 0, mn = 0;
     Object.keys(state.tournaments).forEach(function(k){ if(state.tournaments[k].categoryId===id) tn++; });
     Object.keys(state.matches).forEach(function(k){ if(state.matches[k].categoryId===id) mn++; });
+    var catPoster = cat.poster || '';
+    var thumbInner = catPoster ? '<img src="'+esc(catPoster)+'" class="w-9 h-9 object-contain rounded-lg" alt="">' : '<span class="material-symbols-outlined text-[18px] text-primary">category</span>';
     return '<div class="bg-surface-container rounded-lg p-3.5 flex items-center justify-between gap-2 shadow-md">'
-      + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[18px] text-primary">category</span></div>'
+      + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 overflow-hidden">'+thumbInner+'</div>'
       + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(cat.name)+'</span>'
       + '<span class="font-label-sm text-label-sm text-tertiary">'+tn+' tournaments \u2022 '+mn+' matches</span></div></div>'
       + '<div class="flex items-center gap-1.5 shrink-0">'
