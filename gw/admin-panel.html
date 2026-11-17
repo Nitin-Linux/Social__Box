@@ -15,7 +15,7 @@
 <script>
 (function(){
   var t = null;
-  try { t = sessionStorage.getItem('gwAdminToken'); } catch(e){}
+  try { t = localStorage.getItem('gwAdminToken'); } catch(e){}
   if (!t) { window.location.replace('index.html'); return; }
   document.documentElement.style.visibility = 'hidden';
   try {
@@ -24,21 +24,21 @@
       firebase.database().ref('adminSessions/' + t).once('value').then(function(snap){
         var v = snap.val();
         if (!v || !(Number(v.expiresAt) > Date.now())) {
-          try { sessionStorage.removeItem('gwAdminToken'); } catch(e){}
+          try { localStorage.removeItem('gwAdminToken'); } catch(e){}
           window.location.replace('index.html');
           return;
         }
         firebase.database().ref('adminSessions/' + t).update({ expiresAt: Date.now() + 12*60*60*1000 });
         document.documentElement.style.visibility = '';
       }).catch(function(){
-        try { sessionStorage.removeItem('gwAdminToken'); } catch(e){}
+        try { localStorage.removeItem('gwAdminToken'); } catch(e){}
         window.location.replace('index.html');
       });
     } else {
       window.location.replace('index.html');
     }
   } catch(e) {
-    try { sessionStorage.removeItem('gwAdminToken'); } catch(e2){}
+    try { localStorage.removeItem('gwAdminToken'); } catch(e2){}
     window.location.replace('index.html');
   }
 })();
@@ -965,10 +965,10 @@ function openScreenshot(title, sub, src){
 function closeScreenshot(){ hideModal('screenshot-modal'); }
 function adminExit(){
   try{
-    var t = sessionStorage.getItem('gwAdminToken');
+    var t = localStorage.getItem('gwAdminToken');
     if(t && db) db.ref('adminSessions/' + t).remove();
-    sessionStorage.removeItem('gwAdminToken');
-    sessionStorage.removeItem('gw_admin_auth');
+    localStorage.removeItem('gwAdminToken');
+    localStorage.removeItem('gw_admin_auth');
   }catch(e){}
   toast('Admin session closed. Opening login page...','logout');
   setTimeout(function(){ window.location.href='index.html'; }, 600);
@@ -1490,7 +1490,7 @@ async function approveDeposit(id){
         depositId: id, createdAt: Date.now(), uniqueId: txId };
     }).then(function(txRes){
       var p = txRes.committed ? db.ref('users/'+dep.uid+'/wallet/deposit').transaction(function(v){ return (Number(v)||0) + (Number(dep.amount)||0) + (Number(dep.bonus)||0); }) : Promise.resolve();
-      return p.then(function(){ return db.ref('deposits/'+id).update({ status:'approved', processedAt: Date.now(), creditTxId: txId }); });
+      return p.then(function(){ var upd={ status:'approved', processedAt: Date.now(), creditTxId: txId }; return Promise.all([db.ref('deposits/'+id).update(upd), db.ref('depositHistory/'+dep.uid+'/'+id).update(upd)]); });
     }).then(function(){ toast('Deposit approved & wallet credited \u2713'); })
       .catch(function(e){ toast('Error: '+e.message,'error'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
@@ -1507,7 +1507,7 @@ async function rejectDeposit(id){
     cur.status = 'rejected'; cur.processedAt = Date.now();
     return cur;
   }).then(function(res){
-    if(res.committed) toast('Deposit rejected','cancel');
+    if(res.committed){ db.ref('depositHistory/'+d.uid+'/'+id).update({ status:'rejected', processedAt: Date.now() }); toast('Deposit rejected','cancel'); }
     else toast('Already processed','shield');
   });
 }
@@ -1621,6 +1621,7 @@ function confirmPayoutApprove(){
         amount: -(Number(po.amount)||0), note: 'Payout paid via UPI \u2022 UTR: '+utr,
         payoutId: id, createdAt: Date.now(), uniqueId: txId };
     });
+    db.ref('withdrawalRequests/'+po.uid+'/'+id).update({ status:'paid', utr: utr, paidAt: Date.now() });
     toast('Payout marked PAID \u2713 (history saved)');
     closeUtrModal();
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
@@ -1651,6 +1652,7 @@ async function rejectPayout(id){
         db.ref('users/'+p.uid+'/wallet/winning').transaction(function(v){ return (Number(v)||0) + (Number(p.amount)||0); });
       }
     });
+    db.ref('withdrawalRequests/'+p.uid+'/'+id).update({ status:'rejected', rejectReason: reason, processedAt: Date.now() });
     toast('Payout rejected & amount refunded to wallet','replay');
   });
 }

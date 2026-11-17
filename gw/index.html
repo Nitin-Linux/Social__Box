@@ -341,7 +341,7 @@
 </script>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getDatabase, ref, set, get, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
   const $ = id => document.getElementById(id);
@@ -393,6 +393,14 @@
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getDatabase(app);
+    let __gwAuto = false;
+    onAuthStateChanged(auth, user => {
+      if (user && !__gwAuto) {
+        __gwAuto = true;
+        showMessage('Pehle se logged in ho — panel khul raha hai...', 'success');
+        setTimeout(() => { window.location.href = 'user-panel.html'; }, 400);
+      }
+    });
     showMessage('Firebase connected. You can create an account or sign in.', 'success');
     setTimeout(clearMessage, 2500);
   } catch (error) {
@@ -441,6 +449,7 @@
         walletBalance:0,
         createdAt:serverTimestamp()
       });
+      await signOut(auth);
       signupForm.reset();
       showMessage('Account created and player profile saved in Firebase. Please log in.', 'success');
       showScreen('login');
@@ -490,7 +499,7 @@
           createdAt: Date.now(),
           expiresAt: Date.now() + 12*60*60*1000
         });
-        sessionStorage.setItem('gwAdminToken', token);
+        localStorage.setItem('gwAdminToken', token);
         showMessage('Admin access granted. Opening admin panel...', 'success');
         setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
       } catch (sessionErr) {
