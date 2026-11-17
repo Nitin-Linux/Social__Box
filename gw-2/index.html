@@ -476,8 +476,22 @@
       const button=$('submitButton'), original=button.innerHTML;
       button.disabled=true;
       button.innerHTML='<span class="material-symbols-outlined animate-spin">refresh</span><span>Opening Admin...</span>';
-      showMessage('Admin access granted. Opening admin panel...', 'success');
-      setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
+      try {
+        const bytes=new Uint8Array(24);
+        crypto.getRandomValues(bytes);
+        const token=Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+        await set(ref(db, `adminSessions/${token}`), {
+          createdAt: Date.now(),
+          expiresAt: Date.now() + 12*60*60*1000
+        });
+        sessionStorage.setItem('gwAdminToken', token);
+        showMessage('Admin access granted. Opening admin panel...', 'success');
+        setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
+      } catch (sessionErr) {
+        console.error('Admin session failed:', sessionErr);
+        showMessage('Admin session create nahi hui — Firebase Database rules check karo.');
+        button.disabled=false; button.innerHTML=original;
+      }
       return;
     }
     if (!auth || !db) { showMessage('Firebase is not connected. Check firebase-config.js and reload.'); return; }
