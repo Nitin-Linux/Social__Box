@@ -683,14 +683,18 @@
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
     </div>
-    <div class="flex flex-col gap-2.5">
+    <div class="grid grid-cols-2 gap-2">
+      <button type="button" id="wm-tab-winners" onclick="wmTab('winners')" class="flex-1 min-h-[40px] rounded-lg bg-surface-container-high text-tertiary font-label-sm text-label-sm font-bold uppercase tracking-wider">Winners &amp; Payouts</button>
+      <button type="button" id="wm-tab-proofs" onclick="wmTab('proofs')" class="flex-1 min-h-[40px] rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Proofs (<span id="wm-tab-proof-count">0</span>)</button>
+    </div>
+    <div class="flex flex-col gap-2.5" id="wm-proofs-block">
       <div class="flex items-center justify-between">
         <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider" id="wm-proofs-label">Submitted Player Proofs (0)</span>
         <span class="font-label-sm text-label-sm text-secondary-fixed-dim">Verify before select</span>
       </div>
       <div class="flex flex-col gap-2.5" id="wm-proofs-list"></div>
     </div>
-    <div class="flex flex-col gap-3 pt-2">
+    <div class="flex flex-col gap-3 pt-2 hidden" id="wm-winners-block">
       <div class="flex items-center justify-between">
         <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Configure Match Podiums</span>
         <span class="font-label-sm text-label-sm text-outline" id="wm-pool">Max Pool: &#8377;0</span>
@@ -1253,9 +1257,10 @@ function renderTournaments(){
     + '<span class="font-body-sm text-body-sm text-tertiary">'+esc(t.date||'')+' '+esc(t.time||'')+(t.details?' \u2022 '+esc(t.details):'')+'</span></div>'
     + '<div class="flex flex-col items-end gap-1 shrink-0">'+statusBadge(t.status)+paidBadge+'</div></div>'
     + '<div class="grid grid-cols-3 gap-2 bg-surface-container p-3 rounded-lg">'
-    + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Slots</span><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+(Number(t.registered)||0)+' / '+(Number(t.totalSlots)||0)+'</span></div>'
+    + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Slots</span><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+Math.max(Number(t.registered)||0,Object.keys(t.participants||{}).length)+' / '+(Number(t.totalSlots)||0)+'</span></div>'
     + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Prize Pool</span><span class="font-label-lg text-label-lg text-primary font-bold">'+fmt(t.prizePool)+'</span></div>'
     + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Entry / Kill</span><span class="font-label-lg text-label-lg text-secondary font-bold">'+fmt(t.entryFee)+' / '+fmt(t.perKill)+'</span></div></div>'
+    + joinedUsersHtml(id,t)
     + '<div class="flex items-center justify-between px-3 py-2 bg-surface-container-high rounded-lg">'
     + '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-tertiary">key</span><span class="font-body-sm text-body-sm text-on-surface">Room: <strong class="font-label-md tracking-wider">'+esc(t.roomId||'\u2014')+'</strong></span></div>'
     + '<span class="font-body-sm text-body-sm text-outline">Pass: <strong class="text-on-surface font-label-md tracking-wider">'+esc(t.roomPass||'\u2014')+'</strong></span></div>'
@@ -1526,7 +1531,7 @@ function payoutCard(id, p){
     + '<div class="flex items-center justify-between pl-1.5"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-primary tracking-wide">'+esc(p.reqId||id)+'</span><span class="text-outline text-label-sm">\u2022</span><span class="font-label-sm text-label-sm text-outline">'+timeAgo(p.createdAt)+'</span></div>'+badge+'</div>'
     + '<div class="bg-surface-container p-3 rounded-lg flex items-center justify-between pl-2">'
     + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[24px] text-tertiary">sports_esports</span></div>'
-    + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg font-bold text-on-surface truncate">'+esc(tag)+'</span><span class="font-body-sm text-body-sm text-outline truncate">UID: '+esc(p.uid||'\u2014')+'</span></div></div>'
+    + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg font-bold text-on-surface truncate">'+esc(tag)+'</span><span class="font-body-sm text-body-sm text-outline truncate">UID: '+esc(p.gameUID||p.uid||'\u2014')+'</span></div></div>'
     + '<div class="flex flex-col items-end shrink-0 pl-2"><span class="font-label-sm text-label-sm text-outline">Payout Amount</span><span class="font-headline-sm text-headline-sm font-bold text-on-surface">'+fmt(p.amount)+'</span></div></div>'
     + '<div class="bg-surface-container-highest/60 p-2.5 rounded-lg flex flex-col space-y-1.5">'
     + '<div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Beneficiary VPA (UPI)</span>'
@@ -1780,6 +1785,41 @@ function applyWalletAdjustment(){
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
 /* ---------------- winner select & prize distribution ---------------- */
+function wmTab(which){
+  var w = document.getElementById('wm-winners-block'), p = document.getElementById('wm-proofs-block');
+  var bw = document.getElementById('wm-tab-winners'), bp = document.getElementById('wm-tab-proofs');
+  if(!w || !p) return;
+  var onW = which === 'winners';
+  w.classList.toggle('hidden', !onW);
+  p.classList.toggle('hidden', onW);
+  var A = 'flex-1 min-h-[40px] rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold uppercase tracking-wider';
+  var B = 'flex-1 min-h-[40px] rounded-lg bg-surface-container-high text-tertiary font-label-sm text-label-sm font-bold uppercase tracking-wider';
+  if(bw) bw.className = onW ? A : B;
+  if(bp) bp.className = onW ? B : A;
+}
+function toggleJoinedList(id){
+  var el = document.getElementById('joined-list-'+id), ch = document.getElementById('joined-chev-'+id);
+  if(!el) return;
+  var hidden = el.classList.toggle('hidden');
+  el.classList.toggle('flex', !hidden);
+  if(ch) ch.textContent = hidden ? 'expand_more' : 'expand_less';
+}
+function joinedUsersHtml(id,t){
+  var parts = (t.participants && typeof t.participants==='object') ? t.participants : {};
+  var keys = Object.keys(parts);
+  var n = Math.max(keys.length, Number(t.registered)||0);
+  var rowsHtml = keys.map(function(pk){
+    var p = parts[pk]||{}; var u = (state.users||{})[pk]||{};
+    var nm = p.gameName || p.ign || u.gameName || u.ign || u.username || u.email || pk;
+    var gu = p.gameUID || u.gameUID || (/^\d+$/.test(String(u.uid||'')) ? String(u.uid) : '');
+    return '<div class="flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg bg-surface-container-high"><span class="font-label-sm text-label-sm text-on-surface font-bold truncate">'+esc(nm)+'</span><span class="font-body-sm text-body-sm text-tertiary font-mono shrink-0">UID: '+esc(gu||'\u2014')+'</span></div>';
+  }).join('');
+  return '<div class="bg-surface-container p-3 rounded-lg flex flex-col gap-2">'
+    + '<button type="button" class="flex items-center justify-between w-full" onclick="toggleJoinedList(\''+id+'\')">'
+    + '<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">groups</span>Joined Users ('+n+')</span>'
+    + '<span class="material-symbols-outlined text-[18px] text-tertiary" id="joined-chev-'+id+'">expand_more</span></button>'
+    + '<div class="hidden flex-col gap-1.5" id="joined-list-'+id+'">'+(rowsHtml || '<p class="font-label-sm text-label-sm text-tertiary">Abhi koi user join nahi hua.</p>')+'</div></div>';
+}
 function openWinnerModal(tid){
   var t = state.tournaments[tid]; if(!t) return;
   state.winnerTid = tid;
@@ -1788,6 +1828,7 @@ function openWinnerModal(tid){
   document.getElementById('wm-meta').innerText = (t.categoryName||'') + ' \u2022 ' + fmt(t.prizePool) + ' Pool';
   document.getElementById('wm-pool').innerText = 'Max Pool: ' + fmt(t.prizePool);
   loadProofs(tid);
+  wmTab('proofs');
   var rows = Math.max(1, Number(t.totalWinners)||3);
   for(var i=0;i<rows;i++) state.winnerRows.push({ pos: i+1, uid: '', amount: '' });
   renderWinnerRows();
@@ -1806,8 +1847,12 @@ function closeWinnerModal(){ hideModal('winner-modal'); state.winnerTid=null; }
 function loadProofs(tid){
   document.getElementById('wm-proofs-list').innerHTML = '<div class="font-label-sm text-label-sm text-outline p-3 rounded-lg bg-surface-container-high">Loading proofs\u2026</div>';
   if(!db){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Firebase not connected'); return; }
-  db.ref('winnerProofs/'+tid).once('value').then(function(s){
-    state.proofs[tid] = s.val()||{};
+  db.ref('tournamentProofs/'+tid).once('value').then(function(s){
+    var val = s.val()||{};
+    if(!Object.keys(val).length){
+      return db.ref('winnerProofs/'+tid).once('value').then(function(s2){ state.proofs[tid] = s2.val()||{}; renderProofs(tid); });
+    }
+    state.proofs[tid] = val;
     renderProofs(tid);
   }).catch(function(){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Proofs load nahi hue'); });
 }
@@ -1815,6 +1860,7 @@ function renderProofs(tid){
   var wrap = document.getElementById('wm-proofs-list');
   var proofs = Object.keys(state.proofs[tid]||{}).map(function(k){ return [k, state.proofs[tid][k]]; });
   document.getElementById('wm-proofs-label').innerText = 'Submitted Player Proofs ('+proofs.length+')';
+  var tabCount = document.getElementById('wm-tab-proof-count'); if(tabCount) tabCount.innerText = proofs.length;
   if(!proofs.length){
     wrap.innerHTML = '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col items-center gap-1.5 text-center"><span class="material-symbols-outlined text-[24px] text-outline">hourglass_empty</span><span class="font-label-sm text-label-sm text-tertiary">Koi proof submit nahi hua. User App se players result screenshot bhejte hain, wo yahan dikhega.</span></div>';
     return;
@@ -1822,13 +1868,13 @@ function renderProofs(tid){
   wrap.innerHTML = proofs.map(function(e){
     var pid = e[0], p = e[1];
     var u = state.users[p.uid]||{};
-    var tag = p.username || u.username || 'PLAYER';
-    var shot = p.screenshot
-      ? '<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-lowest"><div class="flex items-center gap-2.5 min-w-0"><div class="w-12 h-10 rounded overflow-hidden bg-surface-variant shrink-0"><img class="w-full h-full object-cover" src="'+esc(p.screenshot)+'" alt="Result Screenshot"></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface truncate">result_screenshot</span>'+(p.kills!=null?'<span class="font-label-sm text-label-sm text-primary font-bold">'+esc(p.kills)+' Kills Claimed</span>':'')+'</div></div><button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider shrink-0" onclick="openScreenshot(\'Result Proof \u2022 '+esc(tag)+'\',\'UID: '+esc(p.uid||'\u2014')+'\',\''+esc(p.screenshot)+'\')">Inspect \uD83D\uDD0D</button></div>'
+    var tag = p.gameName || p.username || u.gameName || u.username || u.ign || 'PLAYER';
+    var shot = (p.screenshotData||p.screenshot)
+      ? '<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-lowest"><div class="flex items-center gap-2.5 min-w-0"><div class="w-12 h-10 rounded overflow-hidden bg-surface-variant shrink-0"><img class="w-full h-full object-cover" src="'+esc(p.screenshotData||p.screenshot)+'" alt="Result Screenshot"></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface truncate">result_screenshot</span>'+(p.kills!=null?'<span class="font-label-sm text-label-sm text-primary font-bold">'+esc(p.kills)+' Kills Claimed</span>':'')+'</div></div><button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider shrink-0" onclick="openScreenshot(\'Result Proof \u2022 '+esc(tag)+'\',\'UID: '+esc(p.gameUID||p.uid||'\u2014')+'\',\''+esc(p.screenshotData||p.screenshot)+'\')">Inspect \uD83D\uDD0D</button></div>'
       : '<div class="p-2 rounded-lg bg-surface-container-lowest font-label-sm text-label-sm text-outline">Pending Upload \u23F3</div>';
     return '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col gap-2.5">'
       + '<div class="flex items-center justify-between"><div class="flex items-center gap-2.5 min-w-0"><div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-headline-sm text-headline-sm font-bold text-primary shrink-0">'+esc(initials(tag))+'</div>'
-      + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(tag)+'</span><span class="font-label-sm text-label-sm text-tertiary">UID: '+esc(p.uid||'\u2014')+'</span></div></div>'
+      + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(tag)+'</span><span class="font-label-sm text-label-sm text-tertiary">UID: '+esc(p.gameUID||p.uid||'\u2014')+'</span></div></div>'
       + '<button class="px-2 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold uppercase shrink-0" onclick="pickProofWinner(\''+esc(p.uid||'')+'\',\''+esc(tag)+'\')">Select as Winner</button></div>'
       + shot + '</div>';
   }).join('');
