@@ -397,7 +397,7 @@
     onAuthStateChanged(auth, user => {
       if (user && !__gwAuto) {
         __gwAuto = true;
-        showMessage('Pehle se logged in ho — panel khul raha hai...', 'success');
+        showMessage('Already logged in — opening panel...', 'success');
         setTimeout(() => { window.location.href = 'user-panel.html'; }, 400);
       }
     });
@@ -423,7 +423,7 @@
     const email=$('email').value.trim().toLowerCase();
     const password=signupPwd.value;
     if (!/^\d{4,15}$/.test(gameUID)) {
-      showMessage('Game UID sirf numbers mein hona chahiye (4 se 15 digits).');
+      showMessage('Game UID must be 4-15 digits.');
       button.disabled=false; button.innerHTML=original; return;
     }
     try {
@@ -432,7 +432,7 @@
       const uidDigits=gameUID.replace(/\D/g,'');
       const taken=Object.keys(allUsers).some(k => {const x=allUsers[k]||{};const g=String(x.gameUID||'').replace(/\D/g,'');const o=/^\d+$/.test(String(x.uid||''))?String(x.uid):'';return (g&&g===uidDigits)||(o&&o===uidDigits);});
       if (taken) {
-        showMessage('Ye Game UID pehle se registered hai — ek Game UID se sirf ek account ban sakta hai.');
+        showMessage('Game UID already registered');
         button.disabled=false; button.innerHTML=original; return;
       }
     } catch (dupErr) { console.warn('Duplicate UID check skipped:', dupErr); }
@@ -504,7 +504,7 @@
         setTimeout(() => { window.location.href='admin-panel.html'; }, 600);
       } catch (sessionErr) {
         console.error('Admin session failed:', sessionErr);
-        showMessage('Admin session create nahi hui — Firebase Database rules check karo.');
+        showMessage('Admin session failed. Check Database rules.');
         button.disabled=false; button.innerHTML=original;
       }
       return;

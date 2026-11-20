@@ -111,7 +111,7 @@
 <!-- Firebase Config Warning -->
 <div class="hidden px-3 py-2.5 rounded-lg bg-error-container/20 border border-error/30 flex items-center gap-2" id="fb-warning">
   <span class="material-symbols-outlined text-secondary text-[18px]">warning</span>
-  <span class="font-body-sm text-body-sm text-on-surface">Firebase config set nahi hai. Script ke top par <span class="font-mono text-primary">firebaseConfig</span> mein apna Realtime Database config daalein.</span>
+  <span class="font-body-sm text-body-sm text-on-surface">Firebase config is not set. Set <span class="font-mono text-primary">firebaseConfig</span> to your Realtime Database config.</span>
 </div>
 
 <!-- ============================ TOURNAMENTS SECTION ============================ -->
@@ -225,7 +225,7 @@
       </div>
       <div class="h-12 bg-surface-container-high rounded-lg px-3 flex items-center gap-2">
         <span class="material-symbols-outlined text-[16px] text-outline">link</span>
-        <input class="w-full bg-transparent font-body-sm text-body-sm text-on-surface outline-none" type="text" id="tf-image-url" placeholder="Ya image URL paste karein (logo.jpg bhi chalega)">
+        <input class="w-full bg-transparent font-body-sm text-body-sm text-on-surface outline-none" type="text" id="tf-image-url" placeholder="Paste image URL (logo.jpg works)">
       </div>
     </div>
     <div class="flex flex-col gap-1">
@@ -659,7 +659,7 @@
       <span class="material-symbols-outlined text-[18px]">add</span>
       <span>Create Category</span>
     </button>
-    <p class="font-body-sm text-body-sm text-outline text-center px-2">Yahan banayi gayi har category User App mein automatically show hogi.</p>
+    <p class="font-body-sm text-body-sm text-outline text-center px-2">Every category created here shows automatically in the User App.</p>
   </div>
   <div class="flex items-center justify-between px-1">
     <span class="font-headline-sm text-headline-sm text-on-surface font-bold">All Categories&nbsp;</span>
@@ -713,7 +713,7 @@
           <span class="font-bold" id="wm-preview-label">Preview Payouts (Total: &#8377;0)</span>
         </button>
         <p class="font-body-sm text-body-sm text-outline text-center px-2">
-          Confirm karne par winning balance instantly player wallets mein credit hoga aur tournament Completed lock ho jayega.
+          Winning balance is credited instantly and the tournament locks as Completed.
         </p>
       </div>
     </div>
@@ -747,7 +747,7 @@
       <span class="material-symbols-outlined text-[20px]">verified</span>
       <span class="font-bold">Confirm Prize Distribution</span>
     </button>
-    <p class="font-body-sm text-body-sm text-outline text-center">Double-touch safe: ek tournament ka prize sirf ek baar distribute hota hai. Har winner ki unique transaction ID.</p>
+    <p class="font-body-sm text-body-sm text-outline text-center">Prize can be distributed only once. Each winner gets a unique transaction ID.</p>
   </div>
 </div>
 
@@ -783,7 +783,7 @@
         </div>
         <div>
           <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Approve Payout</h3>
-          <span class="font-label-sm text-label-sm text-outline" id="um-sub">UTR / Bank Ref enter karein</span>
+          <span class="font-label-sm text-label-sm text-outline" id="um-sub">Enter UTR / Bank Ref</span>
         </div>
       </div>
       <button class="w-9 h-9 rounded bg-surface-container-high text-tertiary hover:text-on-surface flex items-center justify-center" onclick="hideModal('utr-modal')">
@@ -884,7 +884,7 @@
       <span class="font-headline-sm text-[14px] font-bold text-on-surface uppercase tracking-wider">Crop Thumbnail</span>
       <button onclick="hideModal('crop-modal')" class="w-8 h-8 rounded-full bg-surface-container-high text-tertiary hover:text-white flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[16px]">close</span></button>
     </div>
-    <p class="font-label-sm text-[11px] text-tertiary">Fixed output: 1280&times;720 (16:9) &bull; Photo ko drag karke set karo, zoom buttons/slider se adjust karo</p>
+    <p class="font-label-sm text-[11px] text-tertiary">Fixed output: 1280&times;720 (16:9) &bull; Drag to set, adjust zoom with buttons/slider</p>
     <div id="crop-viewport" class="w-full rounded-lg overflow-hidden bg-black touch-none select-none" style="aspect-ratio:16/9;cursor:grab">
       <canvas id="crop-canvas" class="w-full h-full block"></canvas>
     </div>
@@ -897,7 +897,7 @@
   </div>
 </div>
 <script>
-/* Access sirf index.html ke admin login se milne wale verified session token se hota hai. */
+/* Access only via the verified session token from the index.html admin login. */
 
 var ADMIN_EMAIL_ID = "gwsarkarr";
 var ADMIN_PASS_ID = "gwhunterr";
@@ -1137,7 +1137,7 @@ function renderCategories(){
   var cats = Object.keys(state.categories).map(function(k){ return [k, state.categories[k]]; })
     .sort(function(a,b){ return (a[1].createdAt||0)-(b[1].createdAt||0); });
   document.getElementById('cat-count-label').innerText = cats.length + ' total';
-  if(!cats.length){ wrap.innerHTML = emptyState('category','Koi category nahi banayi gayi. Upar se pehli category banayein.'); return; }
+  if(!cats.length){ wrap.innerHTML = emptyState('category','No categories yet.'); return; }
   wrap.innerHTML = cats.map(function(c){
     var id = c[0], cat = c[1];
     var tn = 0, mn = 0;
@@ -1262,7 +1262,7 @@ function renderTournaments(){
   if(state.categoryFilter !== 'all') list = list.filter(function(e){ return e[1].categoryId === state.categoryFilter; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   document.getElementById('tournaments-count-label').innerText = 'Showing ' + list.length;
-  if(!list.length){ wrap.innerHTML = emptyState('emoji_events','Koi tournament nahi hai. Upar form se naya tournament create karein.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('emoji_events','No tournaments yet.'); return; }
   wrap.innerHTML = list.map(function(e){
     var id = e[0], t = e[1];
     var dist = state.distributions[id];
@@ -1374,7 +1374,7 @@ function renderMatches(){
   var list = Object.keys(state.matches).map(function(k){ return [k, state.matches[k]]; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   document.getElementById('matches-count-label').innerText = 'Showing ' + list.length;
-  if(!list.length){ wrap.innerHTML = emptyState('sports_esports','Koi match nahi hai. Upar form se naya match create karein.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('sports_esports','No matches yet.'); return; }
   wrap.innerHTML = list.map(function(e){
     var id = e[0], m = e[1];
     return '<div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 shadow-md">'
@@ -1466,15 +1466,15 @@ function renderDeposits(){
   if(state.depFilter!=='all') list = list.filter(function(e){ return (e[1].status||'pending')===state.depFilter; });
   if(q) list = list.filter(function(e){ return ((e[1].txnId||e[0])+' '+(e[1].uid||'')+' '+(e[1].username||'')+' '+(e[1].email||'')).toLowerCase().indexOf(q)!==-1; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
-  if(!list.length){ wrap.innerHTML = emptyState('receipt_long','Koi deposit request nahi mili.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('receipt_long','No deposit requests.'); return; }
   wrap.innerHTML = list.map(function(e){ return depCard(e[0], e[1]); }).join('');
 }
 async function approveDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
-  if(d.status && d.status!=='pending') return toast('Double approval blocked: ye deposit already processed hai','shield');
-  if(!(await gwAsk({title:'Approve Deposit', msg:'Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nPaise wallet mein automatically add honge.', okLabel:'Approve'}))) return;
+  if(d.status && d.status!=='pending') return toast('Already processed','shield');
+  if(!(await gwAsk({title:'Approve Deposit', msg:'Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nCoins will be credited instantly.', okLabel:'Approve'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1482,7 +1482,7 @@ async function approveDeposit(id){
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked: already processed','shield'); return; }
-    if(!res.snapshot.val()){ toast('Deposit record DB me nahi mila','error'); return; }
+    if(!res.snapshot.val()){ toast('Deposit not found','error'); return; }
     var dep = res.snapshot.val() || d;
     var txId = 'DEP_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1501,8 +1501,8 @@ async function rejectDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
-  if(d.status && d.status!=='pending') return toast('Ye deposit already processed hai','shield');
-  if(!(await gwAsk({title:'Reject Deposit', msg:'Ye deposit request reject karni hai?', okLabel:'Reject'}))) return;
+  if(d.status && d.status!=='pending') return toast('Already processed','shield');
+  if(!(await gwAsk({title:'Reject Deposit', msg:'Reject this deposit?', okLabel:'Reject'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1588,8 +1588,8 @@ function renderPayouts(){
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   var pend = list.filter(function(e){ return (e[1].status||'pending')==='pending'; });
   var hist = list.filter(function(e){ return (e[1].status||'pending')!=='pending'; });
-  document.getElementById('payout-queue').innerHTML = pend.length ? pend.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('inbox','Koi pending payout request nahi hai.');
-  document.getElementById('payout-history').innerHTML = hist.length ? hist.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('history','Abhi koi settled history nahi hai.');
+  document.getElementById('payout-queue').innerHTML = pend.length ? pend.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('inbox','No pending payouts.');
+  document.getElementById('payout-history').innerHTML = hist.length ? hist.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('history','No history yet.');
 }
 function openUtrModal(id){
   state.approvingPayoutId = id;
@@ -1604,9 +1604,9 @@ function confirmPayoutApprove(){
   if(!id) return;
   var p = state.payouts[id];
   if(!p) return closeUtrModal();
-  if((p.status||'pending') !== 'pending'){ toast('Ye payout already processed hai','shield'); return closeUtrModal(); }
+  if((p.status||'pending') !== 'pending'){ toast('Already processed','shield'); return closeUtrModal(); }
   var utr = document.getElementById('um-utr').value.trim();
-  if(!utr) return toast('UTR / Bank Ref enter karein','warning');
+  if(!utr) return toast('Enter UTR / Bank Ref','warning');
   db.ref('payouts/'+id).transaction(function(cur){
     if(cur === null || cur === undefined) return null;
     if(cur.status && cur.status!=='pending') return;
@@ -1614,7 +1614,7 @@ function confirmPayoutApprove(){
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked','shield'); return; }
-    if(!res.snapshot.val()){ toast('Payout record DB me nahi mila','error'); return; }
+    if(!res.snapshot.val()){ toast('Payout not found','error'); return; }
     var po = res.snapshot.val() || p;
     var txId = 'PO_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1631,8 +1631,8 @@ function confirmPayoutApprove(){
 async function rejectPayout(id){
   var p = state.payouts[id];
   if(!p) return;
-  if((p.status||'pending') !== 'pending') return toast('Ye payout already processed hai','shield');
-  var reason = await gwAsk({title:'Reject & Refund', msg:'Reject reason (user ko refund hoga):', input:'Invalid UPI / Verification failed', okLabel:'Next'});
+  if((p.status||'pending') !== 'pending') return toast('Already processed','shield');
+  var reason = await gwAsk({title:'Reject & Refund', msg:'Reject reason (refund goes to user):', input:'Invalid UPI / Verification failed', okLabel:'Next'});
   if(reason===null) return;
   if(!(await gwAsk({title:'Confirm Refund', msg:'Reject payout '+fmt(p.amount)+' and refund to user wallet?', okLabel:'Yes, Refund'}))) return;
   db.ref('payouts/'+id).transaction(function(cur){
@@ -1642,7 +1642,7 @@ async function rejectPayout(id){
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Already processed','shield'); return; }
-    if(!res.snapshot.val()){ toast('Payout record DB me nahi mila','error'); return; }
+    if(!res.snapshot.val()){ toast('Payout not found','error'); return; }
     var txId = 'POR_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
       if(cur) return;
@@ -1723,7 +1723,7 @@ function renderUsers(){
   if(state.usrFilter==='banned') list = list.filter(function(e){ return e[1].banned; });
   if(state.usrFilter==='active') list = list.filter(function(e){ return !e[1].banned; });
   if(q) list = list.filter(function(e){ return ((e[1].username||'')+' '+(e[1].uid||e[0])+' '+(e[1].email||'')+' '+(e[1].gameUid||'')).toLowerCase().indexOf(q)!==-1; });
-  if(!list.length){ wrap.innerHTML = emptyState('shield_person','Koi registered user nahi mila. User App se register hone par yahan dikhega.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('shield_person','No users yet.'); return; }
   wrap.innerHTML = list.map(function(e){ return userCard(e[0], e[1]); }).join('');
 }
 async function toggleBan(id){
@@ -1736,7 +1736,7 @@ function viewUserTxns(uid){
   if(!db) return;
   db.ref('transactions').orderByChild('uid').equalTo(uid).limitToLast(25).once('value').then(function(s){
     var txs = Object.keys(s.val()||{}).map(function(k){ return s.val()[k]; }).sort(function(a,b){ return (b.createdAt||0)-(a.createdAt||0); });
-    if(!txs.length) return toast('Is user ki koi transaction history nahi hai','info');
+    if(!txs.length) return toast('No transaction history','info');
     document.getElementById('sm-title').innerText = 'Transaction History \u2022 '+(txs[0].username||uid);
     document.getElementById('sm-sub').innerText = txs.length+' records';
     var old = document.getElementById('txn-history-box');
@@ -1756,7 +1756,7 @@ function viewUserTxns(uid){
     }).join('');
     document.getElementById('sm-body').appendChild(box);
     showModal('screenshot-modal');
-  }).catch(function(){ toast('History load nahi hui (index rule chahiye ho sakta hai)','error'); });
+  }).catch(function(){ toast('History load failed','error'); });
 }
 /* wallet modal */
 function openWalletModal(uid){
@@ -1801,17 +1801,17 @@ async function applyWalletAdjustment(){
   if(!uid) return;
   var u = state.users[uid]; if(!u) return;
   var amt = Number(document.getElementById('wallet-amount').value);
-  if(!amt || amt<=0) return toast('Valid amount enter karein','warning');
+  if(!amt || amt<=0) return toast('Enter a valid amount','warning');
   var ledger = state.walletLedger;
   var mode = state.walletMode;
   var cur = Number((u.wallet||{})[ledger])||0;
-  if(mode==='deduct' && amt>cur) return toast('Wallet mein itne paise nahi hain (Balance: '+cur+')','warning');
+  if(mode==='deduct' && amt>cur) return toast('Insufficient balance ('+cur+')','warning');
   if(!(await gwAsk({title:'Confirm', msg:(mode==='add'?'Add ':'Deduct ')+fmt(amt)+' '+(ledger==='deposit'?'Deposit':'Winning')+' balance '+(mode==='add'?'to':'from')+' '+(u.username||uid)+'?', okLabel:'Confirm'}))) return;
   db.ref('users/'+uid+'/wallet/'+ledger).transaction(function(v){
     var val = Number(v)||0;
     return mode==='add' ? val+amt : Math.max(0, val-amt);
   }).then(function(res){
-    if(!res.committed) return toast('Adjustment failed, retry karein','error');
+    if(!res.committed) return toast('Adjustment failed. Retry.','error');
     db.ref('transactions').push({
       uid: uid, username: u.username||'', type: mode==='add'?'admin_add':'admin_deduct',
       wallet: ledger, amount: mode==='add'?amt:-amt,
@@ -1856,7 +1856,7 @@ function joinedUsersHtml(id,t){
     + '<button type="button" class="flex items-center justify-between w-full" onclick="toggleJoinedList(\''+id+'\')">'
     + '<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">groups</span>Joined Users ('+n+')</span>'
     + '<span class="material-symbols-outlined text-[18px] text-tertiary" id="joined-chev-'+id+'">expand_more</span></button>'
-    + '<div class="hidden flex-col gap-1.5" id="joined-list-'+id+'">'+(rowsHtml || '<p class="font-label-sm text-label-sm text-tertiary">Abhi koi user join nahi hua.</p>')+'</div></div>';
+    + '<div class="hidden flex-col gap-1.5" id="joined-list-'+id+'">'+(rowsHtml || '<p class="font-label-sm text-label-sm text-tertiary">No participants yet.</p>')+'</div></div>';
 }
 function openWinnerModal(tid){
   var t = state.tournaments[tid]; if(!t) return;
@@ -1892,7 +1892,7 @@ function loadProofs(tid){
     }
     state.proofs[tid] = val;
     renderProofs(tid);
-  }).catch(function(){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Proofs load nahi hue'); });
+  }).catch(function(){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Proofs load failed'); });
 }
 function renderProofs(tid){
   var wrap = document.getElementById('wm-proofs-list');
@@ -1900,7 +1900,7 @@ function renderProofs(tid){
   document.getElementById('wm-proofs-label').innerText = 'Submitted Player Proofs ('+proofs.length+')';
   var tabCount = document.getElementById('wm-tab-proof-count'); if(tabCount) tabCount.innerText = proofs.length;
   if(!proofs.length){
-    wrap.innerHTML = '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col items-center gap-1.5 text-center"><span class="material-symbols-outlined text-[24px] text-outline">hourglass_empty</span><span class="font-label-sm text-label-sm text-tertiary">Koi proof submit nahi hua. User App se players result screenshot bhejte hain, wo yahan dikhega.</span></div>';
+    wrap.innerHTML = '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col items-center gap-1.5 text-center"><span class="material-symbols-outlined text-[24px] text-outline">hourglass_empty</span><span class="font-label-sm text-label-sm text-tertiary">No proofs submitted yet.</span></div>';
     return;
   }
   wrap.innerHTML = proofs.map(function(e){
@@ -1956,7 +1956,7 @@ function renderWinnerRows(){
     var gu = p.gameUID || u.gameUID || (/^\d+$/.test(String(u.uid||'')) ? String(u.uid) : pk);
     return '<option value="'+esc(pk)+'">'+esc(nm+' \u2022 '+gu)+'</option>';
   }).join('');
-  if(!userOpts) userOpts = '<option value="">\u2014 Is tournament me koi join nahi hua \u2014</option>';
+  if(!userOpts) userOpts = '<option value="">\u2014 No participants for this tournament \u2014</option>';
   wrap.innerHTML = state.winnerRows.map(function(r, i){
     var first = i===0;
     var cardCls = first ? 'bg-surface-container-high p-3.5 rounded-xl flex flex-col gap-2.5 shadow-[inset_0_0_12px_rgba(255,180,171,0.06)]' : 'bg-surface-container-high p-3 rounded-xl flex flex-col gap-2';
@@ -1996,9 +1996,9 @@ function previewPrizeDistribution(){
   var tid = state.winnerTid;
   var t = state.tournaments[tid]; if(!t) return;
   var dist = state.distributions[tid];
-  if(dist && dist.status==='paid') return toast('Is tournament ka prize already distribute ho chuka hai (Paid)','shield');
+  if(dist && dist.status==='paid') return toast('Prize already distributed (Paid)','shield');
   var winners = winnerTotals();
-  if(!winners.length) return toast('Kam se kam ek winner aur prize amount select karein','warning');
+  if(!winners.length) return toast('Select at least one winner','warning');
   var total = winners.reduce(function(s,r){ return s+Number(r.amount); },0);
   document.getElementById('pm-sub').innerText = t.name + ' \u2022 ' + winners.length + ' winners';
   document.getElementById('pm-list').innerHTML = winners.map(function(r){
@@ -2036,7 +2036,7 @@ function confirmPrizeDistribution(){
       state.distributing = false;
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">verified</span><span class="font-bold">Confirm Prize Distribution</span>';
-      toast('Double distribution blocked: ye tournament ka prize pehle hi distribute ho chuka hai','shield');
+      toast('Already distributed','shield');
       return;
     }
     return creditWinners(tid, payload)
@@ -2054,7 +2054,7 @@ function confirmPrizeDistribution(){
     state.distributing = false;
     btn.disabled = false;
     btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">verified</span><span class="font-bold">Confirm Prize Distribution</span>';
-    toast('Distribution fail hua. Retry karein \u2014 credited prizes dobara credit nahi honge.','error');
+    toast('Distribution failed. Retry.','error');
   });
 }
 function creditWinners(tid, winners){
@@ -2085,14 +2085,14 @@ function setRazorpayKey(){
   if(!db) return toast('Firebase missing','warning');
   db.ref('settings/razorpayKeyId').once('value').then(async function(snap){
     var cur = snap.val() || '';
-    var v = await gwAsk({title:'Razorpay Key ID', msg:'Razorpay Key ID daalo (rzp_test_xxx ya rzp_live_xxx):\nKhali chhodke OK dabao to key hat jayegi (deposits manual approval par chalenge).', input:cur, okLabel:'Save'});
+    var v = await gwAsk({title:'Razorpay Key ID', msg:'Razorpay Key ID (rzp_test_xxx or rzp_live_xxx):\nLeave empty to remove (deposits use manual approval).', input:cur, okLabel:'Save'});
     if(v === null) return;
     v = String(v).trim();
     if(!v){
-      db.ref('settings/razorpayKeyId').remove().then(function(){ toast('Razorpay key hatadi — deposits ab manual approval se','info'); });
+      db.ref('settings/razorpayKeyId').remove().then(function(){ toast('Razorpay key removed','info'); });
       return;
     }
-    db.ref('settings/razorpayKeyId').set(v).then(function(){ toast('Razorpay key save ho gayi \u2713 Ab deposits instant ho sakte hain'); });
+    db.ref('settings/razorpayKeyId').set(v).then(function(){ toast('Razorpay key saved \u2713'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
 
@@ -2101,14 +2101,14 @@ function setVerifyEndpoint(){
   if(!db) return toast('Firebase missing','warning');
   db.ref('settings/verifyEndpoint').once('value').then(async function(snap){
     var cur = snap.val() || '';
-    var v = await gwAsk({title:'Apps Script Verify URL', msg:'Apps Script verify URL daalo (script.google.com se web app deploy karke jo /exec URL milta hai):\nKhali chhodke OK dabao to hat jayegi (deposits manual approve honge).', input:cur, okLabel:'Save'});
+    var v = await gwAsk({title:'Apps Script Verify URL', msg:'Apps Script verify URL (deployed web app /exec URL):\nLeave empty to remove (deposits approved manually).', input:cur, okLabel:'Save'});
     if(v === null) return;
     v = String(v).trim();
     if(!v){
-      db.ref('settings/verifyEndpoint').remove().then(function(){ toast('Verify URL hatadi — deposits manual approval se','info'); });
+      db.ref('settings/verifyEndpoint').remove().then(function(){ toast('Verify URL removed','info'); });
       return;
     }
-    db.ref('settings/verifyEndpoint').set(v).then(function(){ toast('Verify URL save ho gayi \u2713 Ab deposits auto-verify honge'); });
+    db.ref('settings/verifyEndpoint').set(v).then(function(){ toast('Verify URL saved \u2713'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
 
