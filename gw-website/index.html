@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="GW eSPORTS — India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly." />
+    <meta name="google-site-verification" content="9SukYHde9nRJ_IfKmWfsWG92H-yGMK-RHXDLm59UhbU" />
+    <meta name="keywords" content="GW eSPORTS, gw esports, gwesports, GW eSports app, free fire tournaments, esports India, gaming tournaments, win coins, play and earn" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GW eSPORTS" />
+    <meta property="og:title" content="GW eSPORTS | The Ultimate Esports Battleground" />
+    <meta property="og:description" content="India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly." />
+    <meta property="og:image" content="logo.png" />
+    <meta property="og:url" content="https://gwesports.vercel.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GW eSPORTS | The Ultimate Esports Battleground" />
+    <meta name="twitter:description" content="India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly." />
+    <meta name="twitter:image" content="logo.png" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://gwesports.vercel.app/#org",
+          "name": "GW eSPORTS",
+          "alternateName": ["GW eSports", "gwesports", "gwesport", "GW Esports", "GW eSport", "gw esports", "gw esport"],
+          "url": "https://gwesports.vercel.app/",
+          "logo": "https://gwesports.vercel.app/logo.png",
+          "description": "India's fastest-growing esports app. Free Fire tournaments, win coins, withdraw instantly.",
+          "sameAs": []
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://gwesports.vercel.app/#website",
+          "name": "GW eSPORTS",
+          "alternateName": "gwesports",
+          "url": "https://gwesports.vercel.app/",
+          "publisher": { "@id": "https://gwesports.vercel.app/#org" }
+        }
+      ]
+    }
+    </script>
+    <meta name="theme-color" content="#050810" />
+    <link rel="canonical" href="https://gwesports.vercel.app/" />
+    <title>
+      GW eSPORTS | The Ultimate Esports Battleground
+    </title>
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&amp;family=DM+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preload" href="phone.png" as="image" />
+    <style>
+      :root {
+            --bg: #050810;
+            --bg2: #080c18;
+            --bg3: #0d1324;
+            --blue: #1a6fff;
+            --cyan: #00d4ff;
+            --gold: #f5c518;
+            --white: #ffffff;
+            --gray: #8a94a8;
+            --lgray: #b8c0d0;
+            --grad: linear-gradient(135deg, #1a6fff 0%, #00d4ff 100%);
+            --glow: 0 0 20px rgba(0, 212, 255, 0.35);
+            --glow2: 0 0 40px rgba(26, 111, 255, 0.25);
+            --border: 1px solid rgba(0, 212, 255, 0.12);
+            --card-bg: rgba(13, 19, 36, 0.7);
+            --ff-head: 'Barlow Condensed', sans-serif;
+            --ff-body: 'DM Sans', sans-serif;
+            --radius: 14px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--ff-body);
+            background: var(--bg);
+            color: var(--gray);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--ff-head);
+            color: var(--white);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        img { display: block; max-width: 100%; height: auto; }
+        .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* Header */
+        header.header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 8px 0;
+            background: rgba(5, 8, 16, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: var(--border);
+            transition: var(--transition);
+        }
+        header.header.scrolled { padding: 6px 0; background: rgba(5, 8, 16, 0.97); }
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 44px;
+        }
+        .logo { flex-shrink: 0; line-height: 0; }
+        .logo img {
+            max-width: 78px;
+            max-height: 40px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+        .logo img:hover { filter: brightness(1.15); }
+        .mainmenu { flex: 1; min-width: 0; }
+        .mainmenu ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-end;
+            gap: 2px 14px;
+        }
+        .mainmenu ul li a {
+            color: var(--lgray);
+            font-size: 12.5px;
+            font-weight: 600;
+            position: relative;
+            padding: 2px 0;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+        .mainmenu ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--grad);
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+        .mainmenu ul li a:hover,
+        .mainmenu ul li a.active { color: var(--white); }
+        .mainmenu ul li a:hover::after,
+        .mainmenu ul li a.active::after { width: 100%; }
+        .menu-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #0b1020;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--cyan);
+            padding: 8px 0;
+        }
+        .mobile-nav.open { display: block; }
+        .mobile-nav a {
+            display: block;
+            color: var(--lgray);
+            padding: 13px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .mobile-nav a:hover { background: rgba(26, 111, 255, 0.1); color: var(--cyan); }
+
+        /* Section utilities */
+        .sec-pad { padding: 110px 0; }
+        .sec-pad-sm { padding: 80px 0; }
+        .bg-alt { background: var(--bg2); }
+        .section-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 30px;
+            margin-bottom: 18px;
+        }
+        .sec-title { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+        .sec-title h2 { font-size: clamp(34px, 5vw, 46px); line-height: 1.1; margin-bottom: 16px; }
+        .sec-title .sub { font-size: 15px; color: var(--gray); margin-top: 14px; line-height: 1.8; }
+        .title-line {
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--grad);
+            border-radius: 2px;
+            margin: 16px auto 0;
+            box-shadow: var(--glow);
+        }
+
+        /* Hero */
+        .hero-area {
+            position: relative;
+            min-height: auto;
+            display: flex;
+            align-items: flex-start;
+            padding: 88px 0 80px;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        .hero-area::before,
+        .hero-area::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-area::before {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(26, 111, 255, 0.12) 0%, transparent 70%);
+            top: -200px;
+            left: -200px;
+        }
+        .hero-area::after {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+            bottom: -100px;
+            right: -100px;
+        }
+        .hero-grid-lines {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        .hero-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245, 197, 24, 0.1);
+            border: 1px solid rgba(245, 197, 24, 0.3);
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 30px;
+            margin-bottom: 24px;
+        }
+        .hero-badge i { font-size: 10px; animation: blink 1.5s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .hero-content h1 {
+            font-size: clamp(48px, 8vw, 72px);
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 0 40px rgba(26, 111, 255, 0.2);
+        }
+        .hero-content h1 .gradient-text {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline;
+        }
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--lgray);
+            margin: 20px 0 40px;
+            max-width: 480px;
+            line-height: 1.8;
+        }
+        .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .btn-primary-glow {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--grad);
+            color: #fff;
+            padding: 15px 36px;
+            font-family: var(--ff-head);
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.5);
+            animation: pulse-btn 2.5s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary-glow::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+        }
+        .btn-primary-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow2), 0 12px 30px rgba(26, 111, 255, 0.4);
+        }
+        @keyframes pulse-btn {
+            0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.5); }
+            70% { box-shadow: 0 0 0 18px rgba(0, 212, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+        }
+        .btn-outline-glow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--white);
+            padding: 14px 30px;
+            font-family: var(--ff-head);
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        .btn-outline-glow:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: var(--cyan);
+            box-shadow: var(--glow);
+        }
+        .hero-stats { display: flex; gap: 36px; margin-top: 52px; flex-wrap: wrap; align-items: center; }
+        .hero-stat-item .num {
+            font-family: var(--ff-head);
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+        .hero-stat-item .num span { color: var(--cyan); }
+        .hero-stat-item .lbl {
+            font-size: 12px;
+            color: var(--gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .hero-divider { width: 1px; height: 44px; background: rgba(255, 255, 255, 0.08); }
+        .hero-mockup { text-align: center; position: relative; }
+        .hero-mockup img {
+            max-height: min(680px, 78vh);
+            width: auto;
+            margin: 0 auto;
+            filter: drop-shadow(0 20px 60px rgba(26, 111, 255, 0.3));
+            animation: float-phone 6s ease-in-out infinite;
+        }
+        @keyframes float-phone {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-22px) rotate(1deg); }
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .card-glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: var(--border);
+            border-radius: var(--radius);
+            padding: 38px 30px;
+            transition: var(--transition);
+            height: 100%;
+        }
+        .card-glass:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: var(--glow), 0 20px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(-6px);
+        }
+        .card-icon-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            background: rgba(26, 111, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            transition: var(--transition);
+        }
+        .card-glass:hover .card-icon-wrap {
+            background: rgba(26, 111, 255, 0.2);
+            border-color: var(--cyan);
+            box-shadow: var(--glow);
+        }
+        .card-icon-wrap i { font-size: 26px; color: var(--cyan); }
+        .card-glass h4 { font-size: 22px; margin-bottom: 10px; }
+        .card-glass p { font-size: 14px; line-height: 1.8; }
+
+        /* Features 3-column */
+        .features-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+        .features-col { display: flex; flex-direction: column; gap: 20px; }
+        .feature-row-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: var(--card-bg);
+            border: var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .features-col .feature-row-item:last-child { margin-bottom: 0; }
+        .feature-row-item:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: var(--glow);
+            transform: translateX(5px);
+        }
+        .feature-row-item.right:hover { transform: translateX(-5px); }
+        .feature-row-item .fi-icon {
+            flex-shrink: 0;
+            width: 54px;
+            height: 54px;
+            background: rgba(26, 111, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feature-row-item:hover .fi-icon {
+            background: rgba(26, 111, 255, 0.2);
+            border-color: var(--cyan);
+            box-shadow: var(--glow);
+        }
+        .feature-row-item .fi-icon i { font-size: 22px; color: var(--cyan); }
+        .feature-row-item .fi-text h4 { font-size: 20px; margin-bottom: 6px; }
+        .feature-row-item .fi-text p { font-size: 14px; margin: 0; line-height: 1.7; }
+        .center-device {
+            text-align: center;
+            position: relative;
+            padding: 0 12px;
+        }
+        .center-device::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(26, 111, 255, 0.18) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+        .center-device img {
+            max-height: min(560px, 70vh);
+            width: auto;
+            position: relative;
+            margin: 0 auto;
+            filter: drop-shadow(0 10px 40px rgba(26, 111, 255, 0.25));
+        }
+
+        /* Counters */
+        .counter-area {
+            position: relative;
+            background: var(--bg2);
+            border-top: var(--border);
+            border-bottom: var(--border);
+            overflow: hidden;
+        }
+        .counter-area::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(26, 111, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            position: relative;
+            z-index: 1;
+        }
+        .counter-item {
+            padding: 60px 30px;
+            text-align: center;
+            border-right: var(--border);
+            transition: var(--transition);
+        }
+        .counter-item:last-child { border-right: none; }
+        .counter-item:hover { background: rgba(26, 111, 255, 0.04); }
+        .counter-item .c-icon { font-size: 32px; color: var(--cyan); margin-bottom: 16px; opacity: 0.85; }
+        .counter-item h3 {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 900;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .counter-item p {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        /* Download */
+        .download-cta-wrap {
+            background: var(--card-bg);
+            border: var(--border);
+            border-radius: 24px;
+            padding: 70px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .download-cta-wrap::before {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(26, 111, 255, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .download-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .download-row h2 { font-size: clamp(36px, 5vw, 48px); margin: 16px 0 12px; }
+        .download-row .lead { font-size: 15px; max-width: 440px; line-height: 1.8; }
+        .version-note { font-size: 13px; color: var(--gray); margin-top: 16px; }
+        .version-note span { color: var(--cyan); font-weight: 600; }
+        .download-phone img {
+            max-height: min(420px, 55vh);
+            width: auto;
+            margin: 0 auto;
+            filter: drop-shadow(0 10px 40px rgba(26, 111, 255, 0.3));
+        }
+        .whatsapp-banner {
+            background: linear-gradient(135deg, #075E54, #128C7E);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: var(--radius);
+            padding: 30px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 60px;
+        }
+        .wa-info { display: flex; align-items: center; gap: 18px; }
+        .wa-icon { font-size: 40px; color: #25D366; }
+        .wa-text h4 { font-size: 22px; margin-bottom: 4px; color: var(--white); }
+        .wa-text p { font-size: 14px; color: rgba(255, 255, 255, 0.75); margin: 0; }
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #25D366;
+            color: #fff;
+            padding: 13px 28px;
+            font-family: var(--ff-head);
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .btn-wa:hover {
+            background: #1dba58;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Footer */
+        footer.main-footer {
+            background: #000;
+            padding: 50px 0 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+        }
+        .footer-logo img { max-width: 100px; margin-bottom: 16px; }
+        .footer-desc { font-size: 13px; color: var(--gray); max-width: 280px; line-height: 1.8; }
+        .footer-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: var(--gray); font-size: 13px; }
+        .footer-links a:hover { color: var(--cyan); padding-left: 5px; }
+        .social-icons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .social-icons a {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-size: 15px;
+        }
+        .social-icons a:hover {
+            background: rgba(26, 111, 255, 0.15);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .footer-divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 36px 0 24px;
+        }
+        .footer-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #444;
+        }
+        .footer-bottom-row .brand { color: #fff; font-weight: 600; }
+
+        /* Floating */
+        .floating-btns {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 999;
+        }
+        .fab-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: var(--transition);
+        }
+        .fab-btn:hover { transform: scale(1.1); }
+        .fab-whatsapp { background: #25D366; }
+        .fab-whatsapp:hover { box-shadow: 0 0 20px rgba(37, 211, 102, 0.5); }
+        .fab-top {
+            background: var(--grad);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .fab-top.visible { opacity: 1; pointer-events: all; }
+        .fab-top:hover { box-shadow: var(--glow2); }
+
+        @media (max-width: 1100px) {
+            .mainmenu ul li a { font-size: 11.5px; }
+            .mainmenu ul { gap: 2px 10px; }
+            .logo img { max-width: 68px; max-height: 36px; }
+        }
+
+        @media (max-width: 991px) {
+            .menu-toggle { display: block; }
+            .mainmenu { display: none; }
+            .hero-area { padding: 78px 0 60px; min-height: auto; }
+            .hero-row { grid-template-columns: 1fr; text-align: center; }
+            .hero-subtitle { margin-left: auto; margin-right: auto; }
+            .hero-actions { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .hero-divider { display: none; }
+            .hero-mockup img { max-height: min(480px, 62vh); margin-top: 28px; }
+            .cards-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-split { grid-template-columns: 1fr; }
+            .center-device { display: none; }
+            .feature-row-item { flex-direction: column; text-align: center; align-items: center; }
+            .feature-row-item:hover { transform: translateY(-4px); }
+            .counter-grid { grid-template-columns: repeat(2, 1fr); }
+            .counter-item { border-bottom: var(--border); }
+            .counter-item:nth-child(2n) { border-right: none; }
+            .counter-item:nth-last-child(-n+2) { border-bottom: none; }
+            .download-cta-wrap { padding: 50px 30px; }
+            .download-row { grid-template-columns: 1fr; text-align: center; }
+            .download-row .lead { margin: 0 auto; }
+            .download-phone { display: none; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 576px) {
+            .sec-pad { padding: 70px 0; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .counter-item h3 { font-size: 36px; }
+            .floating-btns { bottom: 20px; right: 20px; }
+            .btn-primary-glow { width: 100%; justify-content: center; }
+            .whatsapp-banner { padding: 24px; }
+            .download-cta-wrap { padding: 36px 20px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom-row { flex-direction: column; text-align: center; }
+        }
+    </style>
+  </head>
+  <body>
+    <header class="header" id="mainHeader">
+      <div class="container" style="position:relative;">
+        <div class="header-row">
+          <div class="logo">
+            <a href="/">            <img src="logo.png" alt="GW eSPORTS" />
+</a>
+          </div>
+          <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+          </button>
+          <nav class="mainmenu" id="mainmenu">
+            <ul>
+              <li>
+                <a class="nav-link active" href="#home">                Home
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="#about">                About
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="#features">                Refer &amp; Earn
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="#download">                Contact
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="/terms.html">                Terms
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="/privacy.html">                Privacy
+</a>
+              </li>
+              <li>
+                <a class="nav-link" href="/fair-play.html">                Fair Play
+</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        </nav>
+      </div>
+    </header>
+    <section class="hero-area" id="home">
+      <div class="hero-grid-lines">
+      </div>
+      <div class="container">
+        <div class="hero-row">
+          <div class="hero-content">
+            <div class="hero-badge">
+              <i class="fas fa-circle"></i>
+              Live Tournaments Running Now
+            </div>
+            <h1>
+              GW eSPORTS
+              <br />
+              <span class="gradient-text">              BATTLEGROUND
+</span>
+            </h1>
+            <p class="hero-subtitle">
+              Join India's fastest-growing esports platform. Compete in Free Fire tournaments, climb the leaderboards, and earn real rewards instantly.
+            </p>
+            <div class="hero-actions">
+              <a class="btn-primary-glow" href="Gw esports.apk" download>              <i class="fab fa-android"></i>
+              Download App
+</a>
+              <a class="btn-outline-glow" href="#" id="linkHowToPlay" rel="noopener noreferrer" style="display:none;" target="_blank">              <i class="fas fa-play"></i>
+              How to Play
+</a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat-item">
+                <div class="num">
+                  1.2
+                  <span>                  M+
+</span>
+                </div>
+                <div class="lbl">
+                  Gamers
+                </div>
+              </div>
+              <div class="hero-divider">
+              </div>
+              <div class="hero-stat-item">
+                <div class="num">
+                  71
+                  <span>                  K+
+</span>
+                </div>
+                <div class="lbl">
+                  Tournaments
+                </div>
+              </div>
+              <div class="hero-divider">
+              </div>
+              <div class="hero-stat-item">
+                <div class="num">
+                  ₹2.3
+                  <span>                  L+
+</span>
+                </div>
+                <div class="lbl">
+                  Distributed
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-mockup phone-mockup">
+            <img src="phone.png" alt="GW eSPORTS App" width="400" height="800" loading="eager" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec-pad bg-alt" id="about">
+      <div class="container">
+        <div class="sec-title">
+          <span class="section-tag">          Why GW eSPORTS
+</span>
+          <h2>
+            Built for Champions
+          </h2>
+          <p class="sub">
+            Everything you need for a fair, fast, and rewarding esports experience.
+          </p>
+          <span class="title-line"></span>
+        </div>
+        <div class="cards-grid">
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4>
+              Fair Play Guarantee
+            </h4>
+            <p>
+              Advanced anti-cheat detection ensures a level playing field. Your skill is the only deciding factor — always.
+            </p>
+          </div>
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h4>
+              Zero Lag Platform
+            </h4>
+            <p>
+              High-performance servers handle tournament registration and real-time results in milliseconds. Pure gaming, zero delays.
+            </p>
+          </div>
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <h4>
+              Real Rewards
+            </h4>
+            <p>
+              Win Diamonds, gift vouchers, and exclusive merchandise. Real prizes, real value — no gimmicks.
+            </p>
+          </div>
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <h4>
+              Instant Withdrawal
+            </h4>
+            <p>
+              Transfer winnings to UPI, Paytm, or redeem as gift cards. Available 24/7 with no minimum thresholds.
+            </p>
+          </div>
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h4>
+              Secure &amp; Verified
+            </h4>
+            <p>
+              Bank-grade encryption protects your wallet and personal data at every step. Your security is our priority.
+            </p>
+          </div>
+          <div class="card-glass">
+            <div class="card-icon-wrap">
+              <i class="fas fa-headset"></i>
+            </div>
+            <h4>
+              24/7 Live Support
+            </h4>
+            <p>
+              Our dedicated team is available via WhatsApp and in-app chat round the clock to resolve any issues instantly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec-pad" id="features">
+      <div class="container">
+        <div class="sec-title">
+          <span class="section-tag">          Features
+</span>
+          <h2>
+            Everything in One App
+          </h2>
+          <span class="title-line"></span>
+        </div>
+        <div class="features-split">
+          <div class="features-col">
+            <div class="feature-row-item">
+              <div class="fi-icon">
+                <i class="fas fa-gamepad"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Top Titles
+                </h4>
+                <p>
+                  Solo, duo, and squad modes for Free Fire MAX and more top titles.
+                </p>
+              </div>
+            </div>
+            <div class="feature-row-item">
+              <div class="fi-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Social Login
+                </h4>
+                <p>
+                  One-tap sign in via Google or Facebook. Build squads and invite friends easily.
+                </p>
+              </div>
+            </div>
+            <div class="feature-row-item">
+              <div class="fi-icon">
+                <i class="fas fa-gift"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Refer &amp; Earn
+                </h4>
+                <p>
+                  Invite friends and earn bonus coins on every referral that joins and plays.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="center-device phone-mockup">
+            <img src="phone.png" alt="GW eSPORTS App Features" loading="lazy" />
+          </div>
+          <div class="features-col">
+            <div class="feature-row-item right">
+              <div class="fi-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Live Leaderboard
+                </h4>
+                <p>
+                  Track your rank in real-time as results update instantly after each match.
+                </p>
+              </div>
+            </div>
+            <div class="feature-row-item right">
+              <div class="fi-icon">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Smart Notifications
+                </h4>
+                <p>
+                  Never miss a tournament — get alerts for upcoming matches, results, and rewards.
+                </p>
+              </div>
+            </div>
+            <div class="feature-row-item right">
+              <div class="fi-icon">
+                <i class="fas fa-coins"></i>
+              </div>
+              <div class="fi-text">
+                <h4>
+                  Daily Bonuses
+                </h4>
+                <p>
+                  Earn free coins every day just by logging in. More playtime, more rewards.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="counter-area sec-pad-sm">
+      <div class="container">
+        <div class="counter-grid">
+          <div class="counter-item">
+            <div class="c-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <h3>
+              <span class="counter" data-target="71341">              0
+</span>
+            </h3>
+            <p>
+              Tournaments Hosted
+            </p>
+          </div>
+          <div class="counter-item">
+            <div class="c-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>
+              <span class="counter" data-target="1.2" data-decimal="1">              0
+</span>
+              M+
+            </h3>
+            <p>
+              Active Gamers
+            </p>
+          </div>
+          <div class="counter-item">
+            <div class="c-icon">
+              <i class="fas fa-rupee-sign"></i>
+            </div>
+            <h3>
+              ₹
+              <span class="counter" data-target="2.3" data-decimal="1">              0
+</span>
+              L+
+            </h3>
+            <p>
+              Winnings Distributed
+            </p>
+          </div>
+          <div class="counter-item">
+            <div class="c-icon">
+              <i class="fas fa-gift"></i>
+            </div>
+            <h3>
+              <span class="counter" data-target="128">              0
+</span>
+              K+
+            </h3>
+            <p>
+              Rewards Claimed
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec-pad" id="download">
+      <div class="container">
+        <div class="download-cta-wrap">
+          <div class="download-row">
+            <div>
+              <span class="section-tag">              Get The App
+</span>
+              <h2>
+                Start Competing Today
+              </h2>
+              <p class="lead">
+                Download the GW eSPORTS app and jump into your first tournament in under 60 seconds. Free to join — always.
+              </p>
+              <div style="margin-top:24px;">
+                <a class="btn-primary-glow" href="Gw esports.apk" download>                <i class="fab fa-android"></i>
+                Download APK
+</a>
+              </div>
+              <p class="version-note">
+                Version
+                <span>                1.0.0
+</span>
+                ·  Android 7.0+  ·
+                <span>                Free Download
+</span>
+              </p>
+            </div>
+            <div class="download-phone phone-mockup">
+              <img src="phone.png" alt="GW eSPORTS App" loading="lazy" />
+            </div>
+          </div>
+          <div class="whatsapp-banner">
+            <div class="wa-info">
+              <div class="wa-icon">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="wa-text">
+                <h4>
+                  Join Our WhatsApp Channel
+                </h4>
+                <p>
+                  Get instant updates on tournaments, results, and exclusive offers.
+                </p>
+              </div>
+            </div>
+            <a class="btn-wa" href="https://www.whatsapp.com/channel/0029VbE47GSFi8xb7nfj5k2v" id="linkWaChannel" rel="noopener" target="_blank">            <i class="fab fa-whatsapp"></i>
+            Join Channel
+</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="main-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">
+              <img src="logo.png" alt="GW eSPORTS" />
+            </div>
+            <p class="footer-desc">
+              India's premier esports tournament platform. Built by gamers, for gamers — compete, win, and rise.
+            </p>
+            <div class="social-icons">
+              <a aria-label="Instagram" href="https://instagram.com/gwesports" id="linkInstagram" rel="noopener" target="_blank">              <i class="fab fa-instagram"></i>
+</a>
+              <a aria-label="YouTube" href="https://youtube.com/@gwesports" id="linkYoutube" rel="noopener" target="_blank">              <i class="fab fa-youtube"></i>
+</a>
+              <a aria-label="WhatsApp" href="https://www.whatsapp.com/channel/0029VbE47GSFi8xb7nfj5k2v" id="linkWaFooter" rel="noopener" target="_blank">              <i class="fab fa-whatsapp"></i>
+</a>
+            </div>
+          </div>
+          <div>
+            <p class="footer-heading">
+              Navigate
+            </p>
+            <ul class="footer-links">
+              <li>
+                <a href="/">                Home
+</a>
+              </li>
+              <li>
+                <a href="#about">                About Us
+</a>
+              </li>
+              <li>
+                <a href="#features">                Refer &amp; Earn
+</a>
+              </li>
+              <li>
+                <a href="#download">                Contact
+</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer-heading">
+              Legal
+            </p>
+            <ul class="footer-links">
+              <li>
+                <a href="/terms.html">                Terms &amp; Conditions
+</a>
+              </li>
+              <li>
+                <a href="/privacy.html">                Privacy Policy
+</a>
+              </li>
+              <li>
+                <a href="/fair-play.html">                Fair Play Policy
+</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer-heading">
+              Download App
+            </p>
+            <p class="footer-desc" style="margin-bottom:18px;">
+              Get GW eSPORTS on your Android device and start your first tournament today — completely free.
+            </p>
+            <a class="btn-primary-glow" href="Gw esports.apk" download style="font-size:15px;padding:12px 24px;display:inline-flex;">            <i class="fab fa-android"></i>
+            Download APK
+</a>
+          </div>
+        </div>
+        <hr class="footer-divider" />
+        <div class="footer-bottom-row">
+          <p>
+            © 2026
+            <span class="brand">            GW eSPORTS
+</span>
+            . All Rights Reserved.
+          </p>
+          <p>
+            <span>            Made in India 🇮🇳 for Gamers
+</span>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <div class="floating-btns">
+      <a aria-label="Scroll to top" class="fab-btn fab-top" href="#" id="scrollTopBtn">      <i class="fas fa-chevron-up"></i>
+</a>
+      <a aria-label="WhatsApp" class="fab-btn fab-whatsapp" href="https://www.whatsapp.com/channel/0029VbE47GSFi8xb7nfj5k2v" id="linkWaFloat" rel="noopener" target="_blank">      <i class="fab fa-whatsapp"></i>
+</a>
+    </div>
+    <script>
+      (function () {
+    function safeHttpUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        try {
+            const u = new URL(url.trim());
+            if (u.protocol === 'https:' || u.protocol === 'http:') return u.href;
+        } catch (e) {}
+        return '';
+    }
+
+    (async function loadLandingLinks() {
+        try {
+            const res = await fetch('/api/settings');
+            const json = await res.json();
+            if (!json.success || !json.data) return;
+            const s = json.data;
+            const wa = safeHttpUrl((s.whatsapp_channel_url || '').trim())
+                || (s.whatsapp_number ? 'https://wa.me/' + String(s.whatsapp_number).replace(/\D/g, '') : '');
+            const ig = safeHttpUrl((s.instagram_url || '').trim());
+            const yt = safeHttpUrl((s.youtube_url || '').trim());
+            ['linkWaChannel', 'linkWaFooter', 'linkWaFloat'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && wa) el.href = wa;
+            });
+            if (ig) { const el = document.getElementById('linkInstagram'); if (el) el.href = ig; }
+            if (yt) { const el = document.getElementById('linkYoutube'); if (el) el.href = yt; }
+            const howTo = safeHttpUrl((s.how_to_play_youtube_url || '').trim());
+            const howEl = document.getElementById('linkHowToPlay');
+            if (howEl && howTo) {
+                howEl.href = howTo;
+                howEl.style.display = 'inline-flex';
+            }
+        } catch (e) {}
+    })();
+
+    if (window.location.pathname.match(/^\/page(\/|$)/)) {
+        window.history.replaceState(null, '', '/');
+    }
+
+    const header = document.getElementById('mainHeader');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        header.classList.toggle('scrolled', y > 60);
+        scrollTopBtn.classList.toggle('visible', y > 400);
+        document.querySelectorAll('section[id]').forEach(sec => {
+            const top = sec.offsetTop - 100;
+            const bottom = top + sec.offsetHeight;
+            if (y >= top && y < bottom) {
+                document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
+                const link = document.querySelector('.nav-link[href="#' + sec.id + '"]');
+                if (link) link.classList.add('active');
+            }
+        });
+    });
+    scrollTopBtn.addEventListener('click', e => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mainmenu = document.getElementById('mainmenu');
+    if (mainmenu && mobileNav) {
+        mobileNav.innerHTML = mainmenu.querySelector('ul').innerHTML;
+        mobileNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => mobileNav.classList.remove('open'));
+        });
+    }
+    menuToggle.addEventListener('click', () => mobileNav.classList.toggle('open'));
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const t = document.querySelector(a.getAttribute('href'));
+            if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); mobileNav.classList.remove('open'); }
+        });
+    });
+
+    const counterObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.querySelectorAll('.counter[data-target]').forEach(el => {
+                const t = parseFloat(el.dataset.target);
+                const dec = parseInt(el.dataset.decimal || '0', 10);
+                const duration = 1800;
+                const start = performance.now();
+                const tick = now => {
+                    const p = Math.min((now - start) / duration, 1);
+                    const ease = 1 - Math.pow(1 - p, 3);
+                    const val = t * ease;
+                    el.textContent = dec ? val.toFixed(dec) : Math.floor(val).toLocaleString();
+                    if (p < 1) requestAnimationFrame(tick);
+                    else el.textContent = dec ? t.toFixed(dec) : Math.floor(t).toLocaleString();
+                };
+                requestAnimationFrame(tick);
+            });
+            counterObs.disconnect();
+        });
+    }, { threshold: 0.3 });
+    const counterArea = document.querySelector('.counter-area');
+    if (counterArea) counterObs.observe(counterArea);
+})();
+    </script>
+  </body>
+</html>

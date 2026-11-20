@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>GW eSports Admin</title>
+<meta name="robots" content="noindex,nofollow">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><style id="gwFit">html{-webkit-text-size-adjust:100%;text-size-adjust:100%}html,body{max-width:100%!important;overflow-x:hidden}img,svg,video{max-width:100%;height:auto}</style>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
@@ -11,7 +14,38 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script>
-<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-low": "#1c1b1c", "on-secondary-fixed": "#410001", "surface-container": "#201f20", "outline-variant": "#5f3f3b", "surface-bright": "#3a393a", "surface-container-high": "#2a2a2b", "on-error": "#690005", "tertiary-container": "#909095", "outline": "#af8783", "tertiary": "#c6c6cb", "on-primary-container": "#5c0005", "secondary-fixed": "#ffdad5", "secondary-fixed-dim": "#ffb4aa", "on-surface": "#e5e2e3", "inverse-surface": "#e5e2e3", "surface-dim": "#131314", "on-secondary-fixed-variant": "#930007", "on-tertiary-fixed": "#1a1b1f", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb7", "primary-container": "#ff544b", "on-tertiary-container": "#282a2e", "primary": "#ffb4ab", "primary-fixed-dim": "#ffb4ab", "secondary": "#ffb4aa", "on-primary": "#690006", "secondary-container": "#e10111", "on-background": "#e5e2e3", "tertiary-fixed-dim": "#c6c6cb", "background": "#131314", "on-tertiary": "#2f3034", "tertiary-fixed": "#e3e2e7", "surface-variant": "#353436", "surface": "#131314", "error-container": "#93000a", "surface-container-lowest": "#0e0e0f", "surface-container-highest": "#353436", "on-primary-fixed": "#410002", "on-secondary": "#690003", "on-tertiary-fixed-variant": "#46464b", "on-primary-fixed-variant": "#93000c", "on-secondary-container": "#fff1ef", "error": "#ffb4ab", "inverse-on-surface": "#313031", "surface-tint": "#ffb4ab", "inverse-primary": "#c00014", "primary-fixed": "#ffdad6" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "margin": "2.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter-mobile": "1rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-md": "1rem", "margin-mobile": "1rem", "gutter": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "label-sm": ["Space Grotesk"], "body-sm": ["Inter"], "label-lg": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "display-hero": ["Space Grotesk"], "body-md": ["Inter"], "label-md": ["Space Grotesk"], "display-hero-mobile": ["Space Grotesk"], "headline-md": ["Space Grotesk"] }, fontSize: { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.04em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600" }], "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script>
+<script>
+(function(){
+  var t = null;
+  try { t = localStorage.getItem('gwAdminToken'); } catch(e){}
+  if (!t) { window.location.replace('index.html'); return; }
+  document.documentElement.style.visibility = 'hidden';
+  try {
+    if (typeof firebase !== 'undefined' && typeof firebaseConfig !== 'undefined' && firebaseConfig && firebaseConfig.apiKey) {
+      if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      firebase.database().ref('adminSessions/' + t).once('value').then(function(snap){
+        var v = snap.val();
+        if (!v || !(Number(v.expiresAt) > Date.now())) {
+          try { localStorage.removeItem('gwAdminToken'); } catch(e){}
+          window.location.replace('index.html');
+          return;
+        }
+        firebase.database().ref('adminSessions/' + t).update({ expiresAt: Date.now() + 12*60*60*1000 });
+        document.documentElement.style.visibility = '';
+      }).catch(function(){
+        try { localStorage.removeItem('gwAdminToken'); } catch(e){}
+        window.location.replace('index.html');
+      });
+    } else {
+      window.location.replace('index.html');
+    }
+  } catch(e) {
+    try { localStorage.removeItem('gwAdminToken'); } catch(e2){}
+    window.location.replace('index.html');
+  }
+})();
+</script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-low": "#1c1b1c", "on-secondary-fixed": "#410001", "surface-container": "#201f20", "outline-variant": "#5f3f3b", "surface-bright": "#3a393a", "surface-container-high": "#2a2a2b", "on-error": "#690005", "tertiary-container": "#909095", "outline": "#af8783", "tertiary": "#c6c6cb", "on-primary-container": "#5c0005", "secondary-fixed": "#ffdad5", "secondary-fixed-dim": "#ffb4aa", "on-surface": "#e5e2e3", "inverse-surface": "#e5e2e3", "surface-dim": "#131314", "on-secondary-fixed-variant": "#930007", "on-tertiary-fixed": "#1a1b1f", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb7", "primary-container": "#ff544b", "on-tertiary-container": "#282a2e", "primary": "#ffb4ab", "primary-fixed-dim": "#ffb4ab", "secondary": "#ffb4aa", "on-primary": "#690006", "secondary-container": "#e10111", "on-background": "#e5e2e3", "tertiary-fixed-dim": "#c6c6cb", "background": "#131314", "on-tertiary": "#2f3034", "tertiary-fixed": "#e3e2e7", "surface-variant": "#353436", "surface": "#131314", "error-container": "#93000a", "surface-container-lowest": "#0e0e0f", "surface-container-highest": "#353436", "on-primary-fixed": "#410002", "on-secondary": "#690003", "on-tertiary-fixed-variant": "#46464b", "on-primary-fixed-variant": "#93000c", "on-secondary-container": "#fff1ef", "error": "#ffb4ab", "inverse-on-surface": "#313031", "surface-tint": "#ffb4ab", "inverse-primary": "#c00014", "primary-fixed": "#ffdad6" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px" }, spacing: { "margin": "2.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter-mobile": "1rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-md": "1rem", "margin-mobile": "1rem", "gutter": "1.5rem" }, fontFamily: { "body-lg": ["Inter"], "label-sm": ["Space Grotesk"], "body-sm": ["Inter"], "label-lg": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "display-hero": ["Space Grotesk"], "body-md": ["Inter"], "label-md": ["Space Grotesk"], "display-hero-mobile": ["Space Grotesk"], "headline-md": ["Space Grotesk"] }, fontSize: { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.04em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600" }], "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script>
 <style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style>
 <style>
   body { min-height: max(884px, 100dvh); }
@@ -25,7 +59,7 @@
     <div class="flex items-center justify-between gap-space-sm h-12">
       <div class="flex items-center gap-space-sm min-w-0">
         <div class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0 overflow-hidden">
-          <img src="logo.png" alt="GW" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='&lt;span class=&quot;font-headline-sm text-headline-sm font-bold text-primary tracking-wider&quot;&gt;GW&lt;/span&gt;'">
+          <img src="logo.jpg" alt="GW" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.innerHTML='&lt;span class=&quot;font-headline-sm text-headline-sm font-bold text-primary tracking-wider&quot;&gt;GW&lt;/span&gt;'">
         </div>
         <div class="flex flex-col min-w-0">
           <div class="flex items-center gap-space-xs">
@@ -36,6 +70,12 @@
         </div>
       </div>
       <div class="flex items-center gap-space-sm shrink-0">
+        <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setVerifyEndpoint()">
+          <span class="material-symbols-outlined text-[16px]">verified</span><span>Verify URL</span>
+        </button>
+        <button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="setRazorpayKey()">
+          <span class="material-symbols-outlined text-[16px]">payments</span><span>RZP Key</span>
+        </button>
         <button class="h-9 px-3 rounded-lg bg-secondary-container/20 text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all flex items-center gap-1.5 font-label-md text-label-md font-bold uppercase" type="button" onclick="adminExit()">
           <span class="material-symbols-outlined text-[16px]">logout</span><span>Exit</span>
         </button>
@@ -71,7 +111,7 @@
 <!-- Firebase Config Warning -->
 <div class="hidden px-3 py-2.5 rounded-lg bg-error-container/20 border border-error/30 flex items-center gap-2" id="fb-warning">
   <span class="material-symbols-outlined text-secondary text-[18px]">warning</span>
-  <span class="font-body-sm text-body-sm text-on-surface">Firebase config set nahi hai. Script ke top par <span class="font-mono text-primary">firebaseConfig</span> mein apna Realtime Database config daalein.</span>
+  <span class="font-body-sm text-body-sm text-on-surface">Firebase config is not set. Set <span class="font-mono text-primary">firebaseConfig</span> to your Realtime Database config.</span>
 </div>
 
 <!-- ============================ TOURNAMENTS SECTION ============================ -->
@@ -185,7 +225,7 @@
       </div>
       <div class="h-12 bg-surface-container-high rounded-lg px-3 flex items-center gap-2">
         <span class="material-symbols-outlined text-[16px] text-outline">link</span>
-        <input class="w-full bg-transparent font-body-sm text-body-sm text-on-surface outline-none" type="text" id="tf-image-url" placeholder="Ya image URL paste karein (logo.png bhi chalega)">
+        <input class="w-full bg-transparent font-body-sm text-body-sm text-on-surface outline-none" type="text" id="tf-image-url" placeholder="Paste image URL (logo.jpg works)">
       </div>
     </div>
     <div class="flex flex-col gap-1">
@@ -608,11 +648,18 @@
         <input class="w-full bg-transparent font-body-md text-body-md text-on-surface outline-none" type="text" id="cat-name" placeholder="CS 1v1 (Clash Squad)">
       </div>
     </div>
+    <div class="flex flex-col gap-1">
+      <label class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Category Poster</label>
+      <div class="h-12 bg-surface-container-high rounded-lg px-3 flex items-center">
+        <input class="w-full bg-transparent font-body-md text-body-md text-on-surface outline-none text-xs" type="file" id="cat-poster" accept="image/*">
+      </div>
+      <img id="cat-poster-preview" class="hidden w-16 h-16 object-contain rounded-lg bg-surface-container-high mt-1" alt="poster preview">
+    </div>
     <button class="w-full h-12 bg-secondary-container text-on-secondary-container rounded-lg font-label-lg text-label-lg uppercase tracking-wider flex items-center justify-center gap-2 active:scale-98 transition-all shadow-[0_0_14px_rgba(225,1,17,0.5)]" type="button" onclick="saveCategory()">
       <span class="material-symbols-outlined text-[18px]">add</span>
       <span>Create Category</span>
     </button>
-    <p class="font-body-sm text-body-sm text-outline text-center px-2">Yahan banayi gayi har category User App mein automatically show hogi.</p>
+    <p class="font-body-sm text-body-sm text-outline text-center px-2">Every category created here shows automatically in the User App.</p>
   </div>
   <div class="flex items-center justify-between px-1">
     <span class="font-headline-sm text-headline-sm text-on-surface font-bold">All Categories&nbsp;</span>
@@ -639,14 +686,18 @@
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
     </div>
-    <div class="flex flex-col gap-2.5">
+    <div class="grid grid-cols-2 gap-2">
+      <button type="button" id="wm-tab-winners" onclick="wmTab('winners')" class="flex-1 min-h-[40px] rounded-lg bg-surface-container-high text-tertiary font-label-sm text-label-sm font-bold uppercase tracking-wider">Winners &amp; Payouts</button>
+      <button type="button" id="wm-tab-proofs" onclick="wmTab('proofs')" class="flex-1 min-h-[40px] rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Proofs (<span id="wm-tab-proof-count">0</span>)</button>
+    </div>
+    <div class="flex flex-col gap-2.5" id="wm-proofs-block">
       <div class="flex items-center justify-between">
         <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider" id="wm-proofs-label">Submitted Player Proofs (0)</span>
         <span class="font-label-sm text-label-sm text-secondary-fixed-dim">Verify before select</span>
       </div>
       <div class="flex flex-col gap-2.5" id="wm-proofs-list"></div>
     </div>
-    <div class="flex flex-col gap-3 pt-2">
+    <div class="flex flex-col gap-3 pt-2 hidden" id="wm-winners-block">
       <div class="flex items-center justify-between">
         <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Configure Match Podiums</span>
         <span class="font-label-sm text-label-sm text-outline" id="wm-pool">Max Pool: &#8377;0</span>
@@ -662,7 +713,7 @@
           <span class="font-bold" id="wm-preview-label">Preview Payouts (Total: &#8377;0)</span>
         </button>
         <p class="font-body-sm text-body-sm text-outline text-center px-2">
-          Confirm karne par winning balance instantly player wallets mein credit hoga aur tournament Completed lock ho jayega.
+          Winning balance is credited instantly and the tournament locks as Completed.
         </p>
       </div>
     </div>
@@ -696,7 +747,7 @@
       <span class="material-symbols-outlined text-[20px]">verified</span>
       <span class="font-bold">Confirm Prize Distribution</span>
     </button>
-    <p class="font-body-sm text-body-sm text-outline text-center">Double-touch safe: ek tournament ka prize sirf ek baar distribute hota hai. Har winner ki unique transaction ID.</p>
+    <p class="font-body-sm text-body-sm text-outline text-center">Prize can be distributed only once. Each winner gets a unique transaction ID.</p>
   </div>
 </div>
 
@@ -732,7 +783,7 @@
         </div>
         <div>
           <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Approve Payout</h3>
-          <span class="font-label-sm text-label-sm text-outline" id="um-sub">UTR / Bank Ref enter karein</span>
+          <span class="font-label-sm text-label-sm text-outline" id="um-sub">Enter UTR / Bank Ref</span>
         </div>
       </div>
       <button class="w-9 h-9 rounded bg-surface-container-high text-tertiary hover:text-on-surface flex items-center justify-center" onclick="hideModal('utr-modal')">
@@ -827,9 +878,26 @@
     </div>
   </div>
 </div>
+<div id="crop-modal" class="hidden fixed inset-0 z-[90] items-center justify-center bg-black/85 p-4">
+  <div class="w-full max-w-md bg-surface-container rounded-xl p-4 space-y-3 shadow-2xl">
+    <div class="flex items-center justify-between">
+      <span class="font-headline-sm text-[14px] font-bold text-on-surface uppercase tracking-wider">Crop Thumbnail</span>
+      <button onclick="hideModal('crop-modal')" class="w-8 h-8 rounded-full bg-surface-container-high text-tertiary hover:text-white flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[16px]">close</span></button>
+    </div>
+    <p class="font-label-sm text-[11px] text-tertiary">Fixed output: 1280&times;720 (16:9) &bull; Drag to set, adjust zoom with buttons/slider</p>
+    <div id="crop-viewport" class="w-full rounded-lg overflow-hidden bg-black touch-none select-none" style="aspect-ratio:16/9;cursor:grab">
+      <canvas id="crop-canvas" class="w-full h-full block"></canvas>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="cropZoom(-1)" class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center shrink-0" type="button"><span class="material-symbols-outlined text-[18px]">zoom_out</span></button>
+      <input id="crop-zoom-range" type="range" min="0" max="100" value="0" class="flex-1 accent-[#e10111]" oninput="zoomFromRange(this.value)">
+      <button onclick="cropZoom(1)" class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center shrink-0" type="button"><span class="material-symbols-outlined text-[18px]">zoom_in</span></button>
+    </div>
+    <button onclick="applyCrop()" class="w-full py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-headline-sm text-[12px] font-bold uppercase tracking-wider active:scale-[0.98] transition-all" type="button">Crop &amp; Use Thumbnail</button>
+  </div>
+</div>
 <script>
-/* Login page se aane par flag optional hai:
-   sessionStorage.setItem('gw_admin_auth','1')  */
+/* Access only via the verified session token from the index.html admin login. */
 
 var ADMIN_EMAIL_ID = "gwsarkarr";
 var ADMIN_PASS_ID = "gwhunterr";
@@ -853,6 +921,32 @@ function fmt(n){ n = Number(n)||0; return '\u20B9' + n.toLocaleString('en-IN'); 
 function initials(s){ s = String(s||'U').trim(); return s.charAt(0).toUpperCase(); }
 function timeAgo(ts){ if(!ts) return '\u2014'; var d = Date.now()-ts; var m = Math.floor(d/60000); if(m<1) return 'just now'; if(m<60) return m+'m ago'; var h=Math.floor(m/60); if(h<24) return h+'h ago'; return new Date(ts).toLocaleDateString('en-IN'); }
 function toast(msg, icon){ var b=document.getElementById('toast-banner'); var t=document.getElementById('toast-text'); var i=document.getElementById('toast-icon'); if(!b) return; t.innerText = msg; i.innerText = icon || 'verified'; b.classList.remove('hidden'); clearTimeout(b._t); b._t = setTimeout(function(){ b.classList.add('hidden'); }, 4000); }
+function gwAsk(opts){ return new Promise(function(resolve){
+  var m = document.getElementById('gw-ask-modal');
+  if(!m){
+    m = document.createElement('div'); m.id = 'gw-ask-modal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);padding:16px;';
+    m.innerHTML = '<div style="background:#1c1b1c;border:1px solid #3a393b;border-radius:14px;max-width:340px;width:100%;padding:18px;font-family:Inter,Arial,sans-serif;color:#e5e2e3;box-shadow:0 10px 40px rgba(0,0,0,0.7)">'
+      + '<div id="gw-ask-title" style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;color:#ffb1ab"></div>'
+      + '<div id="gw-ask-msg" style="font-size:13px;line-height:1.5;color:#c9c6c7;margin-bottom:12px;white-space:pre-line"></div>'
+      + '<input id="gw-ask-input" style="display:none;width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #5f3f3b;background:#131314;color:#e5e2e3;font-size:14px;margin-bottom:12px"/>'
+      + '<div style="display:flex;gap:8px;justify-content:flex-end"><button id="gw-ask-cancel" style="padding:9px 14px;border-radius:8px;border:1px solid #5f3f3b;background:#252527;color:#e5e2e3;font-size:12px;font-weight:700;text-transform:uppercase">Cancel</button>'
+      + '<button id="gw-ask-ok" style="padding:9px 14px;border-radius:8px;border:0;background:#e10111;color:#fff;font-size:12px;font-weight:700;text-transform:uppercase">OK</button></div></div>';
+    document.body.appendChild(m);
+  }
+  document.getElementById('gw-ask-title').textContent = opts.title || 'Confirm';
+  document.getElementById('gw-ask-msg').textContent = opts.msg || '';
+  var inp = document.getElementById('gw-ask-input');
+  if(opts.input !== undefined){ inp.style.display = 'block'; inp.value = opts.input; } else { inp.style.display = 'none'; inp.value = ''; }
+  m.style.display = 'flex';
+  var ok = document.getElementById('gw-ask-ok'), cancel = document.getElementById('gw-ask-cancel');
+  ok.textContent = opts.okLabel || 'OK';
+  function close(v){ m.style.display = 'none'; ok.onclick = null; cancel.onclick = null; inp.onkeydown = null; resolve(v); }
+  ok.onclick = function(){ close(opts.input !== undefined ? inp.value.trim() : true); };
+  cancel.onclick = function(){ close(opts.input !== undefined ? null : false); };
+  inp.onkeydown = function(e){ if(e.key === 'Enter') ok.onclick(); };
+  if(opts.input !== undefined){ setTimeout(function(){ inp.focus(); inp.select(); }, 50); }
+});}
 function copyText(txt){ navigator.clipboard.writeText(txt).then(function(){ toast('Copied: '+txt,'content_copy'); }).catch(function(){}); }
 function hideModal(id){ var m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); }
 function showModal(id){ var m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); }
@@ -872,7 +966,12 @@ function openScreenshot(title, sub, src){
 }
 function closeScreenshot(){ hideModal('screenshot-modal'); }
 function adminExit(){
-  try{ sessionStorage.removeItem('gw_admin_auth'); }catch(e){}
+  try{
+    var t = localStorage.getItem('gwAdminToken');
+    if(t && db) db.ref('adminSessions/' + t).remove();
+    localStorage.removeItem('gwAdminToken');
+    localStorage.removeItem('gw_admin_auth');
+  }catch(e){}
   toast('Admin session closed. Opening login page...','logout');
   setTimeout(function(){ window.location.href='index.html'; }, 600);
 }
@@ -895,7 +994,7 @@ function init(){
     renderAll();
     return;
   }
-  firebase.initializeApp(firebaseConfig);
+  if(!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   document.getElementById('sync-chip').innerText = 'SYNCED \u2022 FIREBASE RTDB (LIVE)';
   db.ref('categories').on('value', function(s){ state.categories = s.val()||{}; renderCategoryChips(); renderCategories(); fillCategorySelects(); renderTournaments(); renderMatches(); });
@@ -967,22 +1066,65 @@ function renderCategoryChips(){
   wrap.innerHTML = html;
 }
 function setCategoryFilter(id){ state.categoryFilter = id; renderCategoryChips(); renderTournaments(); }
+function compressCatImage(file, cb){
+  var r = new FileReader();
+  r.onload = function(){
+    var img = new Image();
+    img.onload = function(){
+      var max = 720, w = img.width, h = img.height;
+      if(w > max || h > max){ var s = Math.min(max/w, max/h); w = Math.round(w*s); h = Math.round(h*s); }
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', 0.82));
+    };
+    img.onerror = function(){ cb(''); };
+    img.src = r.result;
+  };
+  r.onerror = function(){ cb(''); };
+  r.readAsDataURL(file);
+}
 function saveCategory(){
   var name = document.getElementById('cat-name').value.trim();
   if(!name) return toast('Category name likhein','warning');
   if(!db) return toast('Firebase config missing','warning');
-  db.ref('categories').push({ name: name, createdAt: Date.now() })
-    .then(function(){ document.getElementById('cat-name').value=''; toast('Category created: '+name); })
-    .catch(function(e){ toast('Error: '+e.message,'error'); });
+  var fEl = document.getElementById('cat-poster');
+  var f = fEl && fEl.files && fEl.files[0];
+  var push = function(poster){
+    var rec = { name: name, createdAt: Date.now() };
+    if(poster) rec.poster = poster;
+    db.ref('categories').push(rec)
+      .then(function(){
+        document.getElementById('cat-name').value='';
+        if(fEl) fEl.value='';
+        var pv = document.getElementById('cat-poster-preview');
+        if(pv){ pv.src=''; pv.classList.add('hidden'); }
+        toast('Category created: '+name);
+      })
+      .catch(function(e){ toast('Error: '+e.message,'error'); });
+  };
+  if(f) compressCatImage(f, function(b64){ push(b64 || null); });
+  else push(null);
 }
-function editCategory(id){
+(function(){
+  var el = document.getElementById('cat-poster');
+  if(!el) return;
+  el.addEventListener('change', function(){
+    var pv = document.getElementById('cat-poster-preview');
+    var f = el.files && el.files[0];
+    if(!f || !pv){ if(pv){ pv.src=''; pv.classList.add('hidden'); } return; }
+    var r = new FileReader();
+    r.onload = function(){ pv.src = r.result; pv.classList.remove('hidden'); };
+    r.readAsDataURL(f);
+  });
+})();
+async function editCategory(id){
   var c = state.categories[id]; if(!c) return;
-  var n = prompt('Category ka naya naam:', c.name);
+  var n = await gwAsk({title:'Rename Category', msg:'Category ka naya naam:', input:c.name, okLabel:'Save'});
   if(n && n.trim()){ db.ref('categories/'+id).update({name:n.trim()}).then(function(){ toast('Category updated'); }); }
 }
-function deleteCategory(id){
+async function deleteCategory(id){
   var c = state.categories[id]; if(!c) return;
-  if(!confirm('Delete category "'+c.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Category', msg:'Delete category "'+c.name+'"?', okLabel:'Delete'}))) return;
   db.ref('categories/'+id).remove().then(function(){ toast('Category deleted','delete'); });
 }
 function emptyState(icon, msg){
@@ -995,14 +1137,16 @@ function renderCategories(){
   var cats = Object.keys(state.categories).map(function(k){ return [k, state.categories[k]]; })
     .sort(function(a,b){ return (a[1].createdAt||0)-(b[1].createdAt||0); });
   document.getElementById('cat-count-label').innerText = cats.length + ' total';
-  if(!cats.length){ wrap.innerHTML = emptyState('category','Koi category nahi banayi gayi. Upar se pehli category banayein.'); return; }
+  if(!cats.length){ wrap.innerHTML = emptyState('category','No categories yet.'); return; }
   wrap.innerHTML = cats.map(function(c){
     var id = c[0], cat = c[1];
     var tn = 0, mn = 0;
     Object.keys(state.tournaments).forEach(function(k){ if(state.tournaments[k].categoryId===id) tn++; });
     Object.keys(state.matches).forEach(function(k){ if(state.matches[k].categoryId===id) mn++; });
+    var catPoster = cat.poster || '';
+    var thumbInner = catPoster ? '<img src="'+esc(catPoster)+'" class="w-9 h-9 object-contain rounded-lg" alt="">' : '<span class="material-symbols-outlined text-[18px] text-primary">category</span>';
     return '<div class="bg-surface-container rounded-lg p-3.5 flex items-center justify-between gap-2 shadow-md">'
-      + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[18px] text-primary">category</span></div>'
+      + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 overflow-hidden">'+thumbInner+'</div>'
       + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(cat.name)+'</span>'
       + '<span class="font-label-sm text-label-sm text-tertiary">'+tn+' tournaments \u2022 '+mn+' matches</span></div></div>'
       + '<div class="flex items-center gap-1.5 shrink-0">'
@@ -1017,12 +1161,7 @@ function onFormImagePick(input){
   var f = input.files && input.files[0];
   if(!f) return;
   document.getElementById('tf-image-name').innerText = f.name;
-  fileToDataUrl(f, 1000, function(url){
-    formImageData = url;
-    var pv = document.getElementById('form-tournament-preview');
-    pv.src = url; pv.classList.remove('hidden');
-    document.getElementById('form-tournament-placeholder').classList.add('hidden');
-  });
+  openCropModal(f);
 }
 function readTournamentForm(){
   var name = document.getElementById('tf-name').value.trim();
@@ -1105,9 +1244,9 @@ function resetTournamentForm(){
   document.getElementById('btn-save-tournament-label').innerText='Publish Tournament';
   document.getElementById('btn-cancel-tournament-edit').classList.add('hidden');
 }
-function deleteTournament(id){
+async function deleteTournament(id){
   var t = state.tournaments[id]; if(!t) return;
-  if(!confirm('Delete tournament "'+t.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Tournament', msg:'Delete tournament "'+t.name+'"?', okLabel:'Delete'}))) return;
   db.ref('tournaments/'+id).remove().then(function(){ toast('Tournament deleted','delete'); });
 }
 function setTournamentStatus(id, status){ db.ref('tournaments/'+id+'/status').set(status).then(function(){ toast('Status: '+status.toUpperCase(),'sync'); }); }
@@ -1123,7 +1262,7 @@ function renderTournaments(){
   if(state.categoryFilter !== 'all') list = list.filter(function(e){ return e[1].categoryId === state.categoryFilter; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   document.getElementById('tournaments-count-label').innerText = 'Showing ' + list.length;
-  if(!list.length){ wrap.innerHTML = emptyState('emoji_events','Koi tournament nahi hai. Upar form se naya tournament create karein.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('emoji_events','No tournaments yet.'); return; }
   wrap.innerHTML = list.map(function(e){
     var id = e[0], t = e[1];
     var dist = state.distributions[id];
@@ -1147,9 +1286,10 @@ function renderTournaments(){
     + '<span class="font-body-sm text-body-sm text-tertiary">'+esc(t.date||'')+' '+esc(t.time||'')+(t.details?' \u2022 '+esc(t.details):'')+'</span></div>'
     + '<div class="flex flex-col items-end gap-1 shrink-0">'+statusBadge(t.status)+paidBadge+'</div></div>'
     + '<div class="grid grid-cols-3 gap-2 bg-surface-container p-3 rounded-lg">'
-    + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Slots</span><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+(Number(t.registered)||0)+' / '+(Number(t.totalSlots)||0)+'</span></div>'
+    + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Slots</span><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+Math.max(Number(t.registered)||0,Object.keys(t.participants||{}).length)+' / '+(Number(t.totalSlots)||0)+'</span></div>'
     + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Prize Pool</span><span class="font-label-lg text-label-lg text-primary font-bold">'+fmt(t.prizePool)+'</span></div>'
     + '<div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Entry / Kill</span><span class="font-label-lg text-label-lg text-secondary font-bold">'+fmt(t.entryFee)+' / '+fmt(t.perKill)+'</span></div></div>'
+    + joinedUsersHtml(id,t)
     + '<div class="flex items-center justify-between px-3 py-2 bg-surface-container-high rounded-lg">'
     + '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-tertiary">key</span><span class="font-body-sm text-body-sm text-on-surface">Room: <strong class="font-label-md tracking-wider">'+esc(t.roomId||'\u2014')+'</strong></span></div>'
     + '<span class="font-body-sm text-body-sm text-outline">Pass: <strong class="text-on-surface font-label-md tracking-wider">'+esc(t.roomPass||'\u2014')+'</strong></span></div>'
@@ -1222,9 +1362,9 @@ function resetMatchForm(){
   document.getElementById('btn-save-match-label').innerText='Publish Match';
   document.getElementById('btn-cancel-match-edit').classList.add('hidden');
 }
-function deleteMatch(id){
+async function deleteMatch(id){
   var m = state.matches[id]; if(!m) return;
-  if(!confirm('Delete match "'+m.name+'"?')) return;
+  if(!(await gwAsk({title:'Delete Match', msg:'Delete match "'+m.name+'"?', okLabel:'Delete'}))) return;
   db.ref('matches/'+id).remove().then(function(){ toast('Match deleted','delete'); });
 }
 function setMatchStatus(id, status){ db.ref('matches/'+id+'/status').set(status).then(function(){ toast('Match status: '+status.toUpperCase(),'sync'); }); }
@@ -1234,7 +1374,7 @@ function renderMatches(){
   var list = Object.keys(state.matches).map(function(k){ return [k, state.matches[k]]; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   document.getElementById('matches-count-label').innerText = 'Showing ' + list.length;
-  if(!list.length){ wrap.innerHTML = emptyState('sports_esports','Koi match nahi hai. Upar form se naya match create karein.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('sports_esports','No matches yet.'); return; }
   wrap.innerHTML = list.map(function(e){
     var id = e[0], m = e[1];
     return '<div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 shadow-md">'
@@ -1326,21 +1466,23 @@ function renderDeposits(){
   if(state.depFilter!=='all') list = list.filter(function(e){ return (e[1].status||'pending')===state.depFilter; });
   if(q) list = list.filter(function(e){ return ((e[1].txnId||e[0])+' '+(e[1].uid||'')+' '+(e[1].username||'')+' '+(e[1].email||'')).toLowerCase().indexOf(q)!==-1; });
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
-  if(!list.length){ wrap.innerHTML = emptyState('receipt_long','Koi deposit request nahi mili.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('receipt_long','No deposit requests.'); return; }
   wrap.innerHTML = list.map(function(e){ return depCard(e[0], e[1]); }).join('');
 }
-function approveDeposit(id){
+async function approveDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
-  if(d.status && d.status!=='pending') return toast('Double approval blocked: ye deposit already processed hai','shield');
-  if(!confirm('Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nPaise wallet mein automatically add honge.')) return;
+  if(d.status && d.status!=='pending') return toast('Already processed','shield');
+  if(!(await gwAsk({title:'Approve Deposit', msg:'Approve deposit of '+fmt(d.amount)+' for '+(d.username||d.uid)+'?\nCoins will be credited instantly.', okLabel:'Approve'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'processing';
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked: already processed','shield'); return; }
+    if(!res.snapshot.val()){ toast('Deposit not found','error'); return; }
     var dep = res.snapshot.val() || d;
     var txId = 'DEP_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1350,23 +1492,24 @@ function approveDeposit(id){
         depositId: id, createdAt: Date.now(), uniqueId: txId };
     }).then(function(txRes){
       var p = txRes.committed ? db.ref('users/'+dep.uid+'/wallet/deposit').transaction(function(v){ return (Number(v)||0) + (Number(dep.amount)||0) + (Number(dep.bonus)||0); }) : Promise.resolve();
-      return p.then(function(){ return db.ref('deposits/'+id).update({ status:'approved', processedAt: Date.now(), creditTxId: txId }); });
+      return p.then(function(){ var upd={ status:'approved', processedAt: Date.now(), creditTxId: txId }; return Promise.all([db.ref('deposits/'+id).update(upd), db.ref('depositHistory/'+dep.uid+'/'+id).update(upd)]); });
     }).then(function(){ toast('Deposit approved & wallet credited \u2713'); })
       .catch(function(e){ toast('Error: '+e.message,'error'); });
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
-function rejectDeposit(id){
+async function rejectDeposit(id){
   if(!db) return;
   var d = state.deposits[id];
   if(!d) return;
-  if(d.status && d.status!=='pending') return toast('Ye deposit already processed hai','shield');
-  if(!confirm('Reject this deposit request?')) return;
+  if(d.status && d.status!=='pending') return toast('Already processed','shield');
+  if(!(await gwAsk({title:'Reject Deposit', msg:'Reject this deposit?', okLabel:'Reject'}))) return;
   db.ref('deposits/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'rejected'; cur.processedAt = Date.now();
     return cur;
   }).then(function(res){
-    if(res.committed) toast('Deposit rejected','cancel');
+    if(res.committed){ db.ref('depositHistory/'+d.uid+'/'+id).update({ status:'rejected', processedAt: Date.now() }); toast('Deposit rejected','cancel'); }
     else toast('Already processed','shield');
   });
 }
@@ -1420,7 +1563,7 @@ function payoutCard(id, p){
     + '<div class="flex items-center justify-between pl-1.5"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-primary tracking-wide">'+esc(p.reqId||id)+'</span><span class="text-outline text-label-sm">\u2022</span><span class="font-label-sm text-label-sm text-outline">'+timeAgo(p.createdAt)+'</span></div>'+badge+'</div>'
     + '<div class="bg-surface-container p-3 rounded-lg flex items-center justify-between pl-2">'
     + '<div class="flex items-center gap-2.5 min-w-0"><div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[24px] text-tertiary">sports_esports</span></div>'
-    + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg font-bold text-on-surface truncate">'+esc(tag)+'</span><span class="font-body-sm text-body-sm text-outline truncate">UID: '+esc(p.uid||'\u2014')+'</span></div></div>'
+    + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg font-bold text-on-surface truncate">'+esc(tag)+'</span><span class="font-body-sm text-body-sm text-outline truncate">UID: '+esc(p.gameUID||p.uid||'\u2014')+'</span></div></div>'
     + '<div class="flex flex-col items-end shrink-0 pl-2"><span class="font-label-sm text-label-sm text-outline">Payout Amount</span><span class="font-headline-sm text-headline-sm font-bold text-on-surface">'+fmt(p.amount)+'</span></div></div>'
     + '<div class="bg-surface-container-highest/60 p-2.5 rounded-lg flex flex-col space-y-1.5">'
     + '<div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Beneficiary VPA (UPI)</span>'
@@ -1445,8 +1588,8 @@ function renderPayouts(){
   list.sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
   var pend = list.filter(function(e){ return (e[1].status||'pending')==='pending'; });
   var hist = list.filter(function(e){ return (e[1].status||'pending')!=='pending'; });
-  document.getElementById('payout-queue').innerHTML = pend.length ? pend.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('inbox','Koi pending payout request nahi hai.');
-  document.getElementById('payout-history').innerHTML = hist.length ? hist.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('history','Abhi koi settled history nahi hai.');
+  document.getElementById('payout-queue').innerHTML = pend.length ? pend.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('inbox','No pending payouts.');
+  document.getElementById('payout-history').innerHTML = hist.length ? hist.map(function(e){ return payoutCard(e[0],e[1]); }).join('') : emptyState('history','No history yet.');
 }
 function openUtrModal(id){
   state.approvingPayoutId = id;
@@ -1461,15 +1604,17 @@ function confirmPayoutApprove(){
   if(!id) return;
   var p = state.payouts[id];
   if(!p) return closeUtrModal();
-  if((p.status||'pending') !== 'pending'){ toast('Ye payout already processed hai','shield'); return closeUtrModal(); }
+  if((p.status||'pending') !== 'pending'){ toast('Already processed','shield'); return closeUtrModal(); }
   var utr = document.getElementById('um-utr').value.trim();
-  if(!utr) return toast('UTR / Bank Ref enter karein','warning');
+  if(!utr) return toast('Enter UTR / Bank Ref','warning');
   db.ref('payouts/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'paid'; cur.utr = utr; cur.paidAt = Date.now(); cur.uniqueId = 'PO_'+id;
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Double approval blocked','shield'); return; }
+    if(!res.snapshot.val()){ toast('Payout not found','error'); return; }
     var po = res.snapshot.val() || p;
     var txId = 'PO_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
@@ -1478,23 +1623,26 @@ function confirmPayoutApprove(){
         amount: -(Number(po.amount)||0), note: 'Payout paid via UPI \u2022 UTR: '+utr,
         payoutId: id, createdAt: Date.now(), uniqueId: txId };
     });
+    db.ref('withdrawalRequests/'+po.uid+'/'+id).update({ status:'paid', utr: utr, paidAt: Date.now() });
     toast('Payout marked PAID \u2713 (history saved)');
     closeUtrModal();
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
-function rejectPayout(id){
+async function rejectPayout(id){
   var p = state.payouts[id];
   if(!p) return;
-  if((p.status||'pending') !== 'pending') return toast('Ye payout already processed hai','shield');
-  var reason = prompt('Reject reason (user ko refund hoga):', 'Invalid UPI / Verification failed');
+  if((p.status||'pending') !== 'pending') return toast('Already processed','shield');
+  var reason = await gwAsk({title:'Reject & Refund', msg:'Reject reason (refund goes to user):', input:'Invalid UPI / Verification failed', okLabel:'Next'});
   if(reason===null) return;
-  if(!confirm('Reject payout '+fmt(p.amount)+' and refund to user wallet?')) return;
+  if(!(await gwAsk({title:'Confirm Refund', msg:'Reject payout '+fmt(p.amount)+' and refund to user wallet?', okLabel:'Yes, Refund'}))) return;
   db.ref('payouts/'+id).transaction(function(cur){
-    if(!cur || (cur.status && cur.status!=='pending')) return;
+    if(cur === null || cur === undefined) return null;
+    if(cur.status && cur.status!=='pending') return;
     cur.status = 'rejected'; cur.rejectReason = reason; cur.processedAt = Date.now(); cur.uniqueId = 'POR_'+id;
     return cur;
   }).then(function(res){
     if(!res.committed){ toast('Already processed','shield'); return; }
+    if(!res.snapshot.val()){ toast('Payout not found','error'); return; }
     var txId = 'POR_' + id;
     db.ref('transactions/'+txId).transaction(function(cur){
       if(cur) return;
@@ -1506,6 +1654,7 @@ function rejectPayout(id){
         db.ref('users/'+p.uid+'/wallet/winning').transaction(function(v){ return (Number(v)||0) + (Number(p.amount)||0); });
       }
     });
+    db.ref('withdrawalRequests/'+p.uid+'/'+id).update({ status:'rejected', rejectReason: reason, processedAt: Date.now() });
     toast('Payout rejected & amount refunded to wallet','replay');
   });
 }
@@ -1574,20 +1723,20 @@ function renderUsers(){
   if(state.usrFilter==='banned') list = list.filter(function(e){ return e[1].banned; });
   if(state.usrFilter==='active') list = list.filter(function(e){ return !e[1].banned; });
   if(q) list = list.filter(function(e){ return ((e[1].username||'')+' '+(e[1].uid||e[0])+' '+(e[1].email||'')+' '+(e[1].gameUid||'')).toLowerCase().indexOf(q)!==-1; });
-  if(!list.length){ wrap.innerHTML = emptyState('shield_person','Koi registered user nahi mila. User App se register hone par yahan dikhega.'); return; }
+  if(!list.length){ wrap.innerHTML = emptyState('shield_person','No users yet.'); return; }
   wrap.innerHTML = list.map(function(e){ return userCard(e[0], e[1]); }).join('');
 }
-function toggleBan(id){
+async function toggleBan(id){
   var u = state.users[id]; if(!u) return;
   var to = !u.banned;
-  if(to && !confirm('Ban user "'+(u.username||id)+'"?')) return;
+  if(to && !(await gwAsk({title:'Ban User', msg:'Ban user "'+(u.username||id)+'"?', okLabel:'Ban'}))) return;
   db.ref('users/'+id+'/banned').set(to).then(function(){ toast(to?'User banned':'User unbanned', to?'block':'lock_open'); });
 }
 function viewUserTxns(uid){
   if(!db) return;
   db.ref('transactions').orderByChild('uid').equalTo(uid).limitToLast(25).once('value').then(function(s){
     var txs = Object.keys(s.val()||{}).map(function(k){ return s.val()[k]; }).sort(function(a,b){ return (b.createdAt||0)-(a.createdAt||0); });
-    if(!txs.length) return toast('Is user ki koi transaction history nahi hai','info');
+    if(!txs.length) return toast('No transaction history','info');
     document.getElementById('sm-title').innerText = 'Transaction History \u2022 '+(txs[0].username||uid);
     document.getElementById('sm-sub').innerText = txs.length+' records';
     var old = document.getElementById('txn-history-box');
@@ -1607,7 +1756,7 @@ function viewUserTxns(uid){
     }).join('');
     document.getElementById('sm-body').appendChild(box);
     showModal('screenshot-modal');
-  }).catch(function(){ toast('History load nahi hui (index rule chahiye ho sakta hai)','error'); });
+  }).catch(function(){ toast('History load failed','error'); });
 }
 /* wallet modal */
 function openWalletModal(uid){
@@ -1647,22 +1796,22 @@ function toggleMode(mode){
     addBtn.className = 'h-10 rounded-lg bg-surface-container text-outline font-label-sm text-label-sm font-semibold uppercase flex items-center justify-center gap-1.5 hover:text-on-surface';
   }
 }
-function applyWalletAdjustment(){
+async function applyWalletAdjustment(){
   var uid = state.walletUid;
   if(!uid) return;
   var u = state.users[uid]; if(!u) return;
   var amt = Number(document.getElementById('wallet-amount').value);
-  if(!amt || amt<=0) return toast('Valid amount enter karein','warning');
+  if(!amt || amt<=0) return toast('Enter a valid amount','warning');
   var ledger = state.walletLedger;
   var mode = state.walletMode;
   var cur = Number((u.wallet||{})[ledger])||0;
-  if(mode==='deduct' && amt>cur) return toast('Wallet mein itne paise nahi hain (Balance: '+cur+')','warning');
-  if(!confirm((mode==='add'?'Add ':'Deduct ')+fmt(amt)+' '+(ledger==='deposit'?'Deposit':'Winning')+' balance '+(mode==='add'?'to':'from')+' '+(u.username||uid)+'?')) return;
+  if(mode==='deduct' && amt>cur) return toast('Insufficient balance ('+cur+')','warning');
+  if(!(await gwAsk({title:'Confirm', msg:(mode==='add'?'Add ':'Deduct ')+fmt(amt)+' '+(ledger==='deposit'?'Deposit':'Winning')+' balance '+(mode==='add'?'to':'from')+' '+(u.username||uid)+'?', okLabel:'Confirm'}))) return;
   db.ref('users/'+uid+'/wallet/'+ledger).transaction(function(v){
     var val = Number(v)||0;
     return mode==='add' ? val+amt : Math.max(0, val-amt);
   }).then(function(res){
-    if(!res.committed) return toast('Adjustment failed, retry karein','error');
+    if(!res.committed) return toast('Adjustment failed. Retry.','error');
     db.ref('transactions').push({
       uid: uid, username: u.username||'', type: mode==='add'?'admin_add':'admin_deduct',
       wallet: ledger, amount: mode==='add'?amt:-amt,
@@ -1674,6 +1823,41 @@ function applyWalletAdjustment(){
   }).catch(function(e){ toast('Error: '+e.message,'error'); });
 }
 /* ---------------- winner select & prize distribution ---------------- */
+function wmTab(which){
+  var w = document.getElementById('wm-winners-block'), p = document.getElementById('wm-proofs-block');
+  var bw = document.getElementById('wm-tab-winners'), bp = document.getElementById('wm-tab-proofs');
+  if(!w || !p) return;
+  var onW = which === 'winners';
+  w.classList.toggle('hidden', !onW);
+  p.classList.toggle('hidden', onW);
+  var A = 'flex-1 min-h-[40px] rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold uppercase tracking-wider';
+  var B = 'flex-1 min-h-[40px] rounded-lg bg-surface-container-high text-tertiary font-label-sm text-label-sm font-bold uppercase tracking-wider';
+  if(bw) bw.className = onW ? A : B;
+  if(bp) bp.className = onW ? B : A;
+}
+function toggleJoinedList(id){
+  var el = document.getElementById('joined-list-'+id), ch = document.getElementById('joined-chev-'+id);
+  if(!el) return;
+  var hidden = el.classList.toggle('hidden');
+  el.classList.toggle('flex', !hidden);
+  if(ch) ch.textContent = hidden ? 'expand_more' : 'expand_less';
+}
+function joinedUsersHtml(id,t){
+  var parts = (t.participants && typeof t.participants==='object') ? t.participants : {};
+  var keys = Object.keys(parts);
+  var n = Math.max(keys.length, Number(t.registered)||0);
+  var rowsHtml = keys.map(function(pk){
+    var p = parts[pk]||{}; var u = (state.users||{})[pk]||{};
+    var nm = p.gameName || p.ign || u.gameName || u.ign || u.username || u.email || pk;
+    var gu = p.gameUID || u.gameUID || (/^\d+$/.test(String(u.uid||'')) ? String(u.uid) : '');
+    return '<div class="flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg bg-surface-container-high"><span class="font-label-sm text-label-sm text-on-surface font-bold truncate">'+esc(nm)+'</span><span class="font-body-sm text-body-sm text-tertiary font-mono shrink-0">UID: '+esc(gu||'\u2014')+'</span></div>';
+  }).join('');
+  return '<div class="bg-surface-container p-3 rounded-lg flex flex-col gap-2">'
+    + '<button type="button" class="flex items-center justify-between w-full" onclick="toggleJoinedList(\''+id+'\')">'
+    + '<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">groups</span>Joined Users ('+n+')</span>'
+    + '<span class="material-symbols-outlined text-[18px] text-tertiary" id="joined-chev-'+id+'">expand_more</span></button>'
+    + '<div class="hidden flex-col gap-1.5" id="joined-list-'+id+'">'+(rowsHtml || '<p class="font-label-sm text-label-sm text-tertiary">No participants yet.</p>')+'</div></div>';
+}
 function openWinnerModal(tid){
   var t = state.tournaments[tid]; if(!t) return;
   state.winnerTid = tid;
@@ -1682,6 +1866,7 @@ function openWinnerModal(tid){
   document.getElementById('wm-meta').innerText = (t.categoryName||'') + ' \u2022 ' + fmt(t.prizePool) + ' Pool';
   document.getElementById('wm-pool').innerText = 'Max Pool: ' + fmt(t.prizePool);
   loadProofs(tid);
+  wmTab('proofs');
   var rows = Math.max(1, Number(t.totalWinners)||3);
   for(var i=0;i<rows;i++) state.winnerRows.push({ pos: i+1, uid: '', amount: '' });
   renderWinnerRows();
@@ -1700,29 +1885,34 @@ function closeWinnerModal(){ hideModal('winner-modal'); state.winnerTid=null; }
 function loadProofs(tid){
   document.getElementById('wm-proofs-list').innerHTML = '<div class="font-label-sm text-label-sm text-outline p-3 rounded-lg bg-surface-container-high">Loading proofs\u2026</div>';
   if(!db){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Firebase not connected'); return; }
-  db.ref('winnerProofs/'+tid).once('value').then(function(s){
-    state.proofs[tid] = s.val()||{};
+  db.ref('tournamentProofs/'+tid).once('value').then(function(s){
+    var val = s.val()||{};
+    if(!Object.keys(val).length){
+      return db.ref('winnerProofs/'+tid).once('value').then(function(s2){ state.proofs[tid] = s2.val()||{}; renderProofs(tid); });
+    }
+    state.proofs[tid] = val;
     renderProofs(tid);
-  }).catch(function(){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Proofs load nahi hue'); });
+  }).catch(function(){ document.getElementById('wm-proofs-list').innerHTML = emptyState('plagiarism','Proofs load failed'); });
 }
 function renderProofs(tid){
   var wrap = document.getElementById('wm-proofs-list');
   var proofs = Object.keys(state.proofs[tid]||{}).map(function(k){ return [k, state.proofs[tid][k]]; });
   document.getElementById('wm-proofs-label').innerText = 'Submitted Player Proofs ('+proofs.length+')';
+  var tabCount = document.getElementById('wm-tab-proof-count'); if(tabCount) tabCount.innerText = proofs.length;
   if(!proofs.length){
-    wrap.innerHTML = '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col items-center gap-1.5 text-center"><span class="material-symbols-outlined text-[24px] text-outline">hourglass_empty</span><span class="font-label-sm text-label-sm text-tertiary">Koi proof submit nahi hua. User App se players result screenshot bhejte hain, wo yahan dikhega.</span></div>';
+    wrap.innerHTML = '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col items-center gap-1.5 text-center"><span class="material-symbols-outlined text-[24px] text-outline">hourglass_empty</span><span class="font-label-sm text-label-sm text-tertiary">No proofs submitted yet.</span></div>';
     return;
   }
   wrap.innerHTML = proofs.map(function(e){
     var pid = e[0], p = e[1];
     var u = state.users[p.uid]||{};
-    var tag = p.username || u.username || 'PLAYER';
-    var shot = p.screenshot
-      ? '<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-lowest"><div class="flex items-center gap-2.5 min-w-0"><div class="w-12 h-10 rounded overflow-hidden bg-surface-variant shrink-0"><img class="w-full h-full object-cover" src="'+esc(p.screenshot)+'" alt="Result Screenshot"></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface truncate">result_screenshot</span>'+(p.kills!=null?'<span class="font-label-sm text-label-sm text-primary font-bold">'+esc(p.kills)+' Kills Claimed</span>':'')+'</div></div><button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider shrink-0" onclick="openScreenshot(\'Result Proof \u2022 '+esc(tag)+'\',\'UID: '+esc(p.uid||'\u2014')+'\',\''+esc(p.screenshot)+'\')">Inspect \uD83D\uDD0D</button></div>'
+    var tag = p.gameName || p.username || u.gameName || u.username || u.ign || 'PLAYER';
+    var shot = (p.screenshotData||p.screenshot)
+      ? '<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-lowest"><div class="flex items-center gap-2.5 min-w-0"><div class="w-12 h-10 rounded overflow-hidden bg-surface-variant shrink-0"><img class="w-full h-full object-cover" src="'+esc(p.screenshotData||p.screenshot)+'" alt="Result Screenshot"></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface truncate">result_screenshot</span>'+(p.kills!=null?'<span class="font-label-sm text-label-sm text-primary font-bold">'+esc(p.kills)+' Kills Claimed</span>':'')+'</div></div><button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider shrink-0" onclick="openScreenshot(\'Result Proof \u2022 '+esc(tag)+'\',\'UID: '+esc(p.gameUID||p.uid||'\u2014')+'\',\''+esc(p.screenshotData||p.screenshot)+'\')">Inspect \uD83D\uDD0D</button></div>'
       : '<div class="p-2 rounded-lg bg-surface-container-lowest font-label-sm text-label-sm text-outline">Pending Upload \u23F3</div>';
     return '<div class="bg-surface-container-high p-3 rounded-xl flex flex-col gap-2.5">'
       + '<div class="flex items-center justify-between"><div class="flex items-center gap-2.5 min-w-0"><div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-headline-sm text-headline-sm font-bold text-primary shrink-0">'+esc(initials(tag))+'</div>'
-      + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(tag)+'</span><span class="font-label-sm text-label-sm text-tertiary">UID: '+esc(p.uid||'\u2014')+'</span></div></div>'
+      + '<div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface font-bold truncate">'+esc(tag)+'</span><span class="font-label-sm text-label-sm text-tertiary">UID: '+esc(p.gameUID||p.uid||'\u2014')+'</span></div></div>'
       + '<button class="px-2 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold uppercase shrink-0" onclick="pickProofWinner(\''+esc(p.uid||'')+'\',\''+esc(tag)+'\')">Select as Winner</button></div>'
       + shot + '</div>';
   }).join('');
@@ -1743,8 +1933,10 @@ function removeWinnerRow(i){
 }
 function setWinnerUid(i, uid){
   var u = state.users[uid];
+  var wt = state.tournaments[state.winnerTid]||{};
+  var p = (wt.participants && wt.participants[uid]) || {};
   state.winnerRows[i].uid = uid;
-  state.winnerRows[i].tag = u ? u.username : '';
+  state.winnerRows[i].tag = (p && p.gameName) || (p && p.ign) || (u ? (u.gameName || u.ign || u.username) : '') || '';
   renderWinnerRows(); updatePreviewLabel();
 }
 function setWinnerAmount(i, val){ state.winnerRows[i].amount = Number(val)||0; updatePreviewLabel(); }
@@ -1756,7 +1948,15 @@ function posLabel(pos){
 }
 function renderWinnerRows(){
   var wrap = document.getElementById('wm-winners-list');
-  var userOpts = Object.keys(state.users).map(function(k){ return '<option value="'+esc(k)+'">'+esc((state.users[k].username||'USER')+' \u2022 '+(state.users[k].uid||k))+'</option>'; }).join('');
+  var wt = state.tournaments[state.winnerTid]||{};
+  var wparts = (wt.participants && typeof wt.participants==='object') ? wt.participants : {};
+  var userOpts = Object.keys(wparts).map(function(pk){
+    var p = wparts[pk]||{}; var u = state.users[pk]||{};
+    var nm = p.gameName || p.ign || u.gameName || u.ign || u.username || 'USER';
+    var gu = p.gameUID || u.gameUID || (/^\d+$/.test(String(u.uid||'')) ? String(u.uid) : pk);
+    return '<option value="'+esc(pk)+'">'+esc(nm+' \u2022 '+gu)+'</option>';
+  }).join('');
+  if(!userOpts) userOpts = '<option value="">\u2014 No participants for this tournament \u2014</option>';
   wrap.innerHTML = state.winnerRows.map(function(r, i){
     var first = i===0;
     var cardCls = first ? 'bg-surface-container-high p-3.5 rounded-xl flex flex-col gap-2.5 shadow-[inset_0_0_12px_rgba(255,180,171,0.06)]' : 'bg-surface-container-high p-3 rounded-xl flex flex-col gap-2';
@@ -1796,9 +1996,9 @@ function previewPrizeDistribution(){
   var tid = state.winnerTid;
   var t = state.tournaments[tid]; if(!t) return;
   var dist = state.distributions[tid];
-  if(dist && dist.status==='paid') return toast('Is tournament ka prize already distribute ho chuka hai (Paid)','shield');
+  if(dist && dist.status==='paid') return toast('Prize already distributed (Paid)','shield');
   var winners = winnerTotals();
-  if(!winners.length) return toast('Kam se kam ek winner aur prize amount select karein','warning');
+  if(!winners.length) return toast('Select at least one winner','warning');
   var total = winners.reduce(function(s,r){ return s+Number(r.amount); },0);
   document.getElementById('pm-sub').innerText = t.name + ' \u2022 ' + winners.length + ' winners';
   document.getElementById('pm-list').innerHTML = winners.map(function(r){
@@ -1836,7 +2036,7 @@ function confirmPrizeDistribution(){
       state.distributing = false;
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">verified</span><span class="font-bold">Confirm Prize Distribution</span>';
-      toast('Double distribution blocked: ye tournament ka prize pehle hi distribute ho chuka hai','shield');
+      toast('Already distributed','shield');
       return;
     }
     return creditWinners(tid, payload)
@@ -1854,7 +2054,7 @@ function confirmPrizeDistribution(){
     state.distributing = false;
     btn.disabled = false;
     btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">verified</span><span class="font-bold">Confirm Prize Distribution</span>';
-    toast('Distribution fail hua. Retry karein \u2014 credited prizes dobara credit nahi honge.','error');
+    toast('Distribution failed. Retry.','error');
   });
 }
 function creditWinners(tid, winners){
@@ -1879,6 +2079,137 @@ function creditWinners(tid, winners){
 
 /* ---------------- boot ---------------- */
 document.addEventListener('DOMContentLoaded', init);
+
+/* ---------------- razorpay key setting ---------------- */
+function setRazorpayKey(){
+  if(!db) return toast('Firebase missing','warning');
+  db.ref('settings/razorpayKeyId').once('value').then(async function(snap){
+    var cur = snap.val() || '';
+    var v = await gwAsk({title:'Razorpay Key ID', msg:'Razorpay Key ID (rzp_test_xxx or rzp_live_xxx):\nLeave empty to remove (deposits use manual approval).', input:cur, okLabel:'Save'});
+    if(v === null) return;
+    v = String(v).trim();
+    if(!v){
+      db.ref('settings/razorpayKeyId').remove().then(function(){ toast('Razorpay key removed','info'); });
+      return;
+    }
+    db.ref('settings/razorpayKeyId').set(v).then(function(){ toast('Razorpay key saved \u2713'); });
+  }).catch(function(e){ toast('Error: '+e.message,'error'); });
+}
+
+/* ---------------- verify endpoint setting ---------------- */
+function setVerifyEndpoint(){
+  if(!db) return toast('Firebase missing','warning');
+  db.ref('settings/verifyEndpoint').once('value').then(async function(snap){
+    var cur = snap.val() || '';
+    var v = await gwAsk({title:'Apps Script Verify URL', msg:'Apps Script verify URL (deployed web app /exec URL):\nLeave empty to remove (deposits approved manually).', input:cur, okLabel:'Save'});
+    if(v === null) return;
+    v = String(v).trim();
+    if(!v){
+      db.ref('settings/verifyEndpoint').remove().then(function(){ toast('Verify URL removed','info'); });
+      return;
+    }
+    db.ref('settings/verifyEndpoint').set(v).then(function(){ toast('Verify URL saved \u2713'); });
+  }).catch(function(e){ toast('Error: '+e.message,'error'); });
+}
+
+/* ---------------- thumbnail crop (fixed 1280x720, 16:9) ---------------- */
+var CROP_OUT_W = 1280, CROP_OUT_H = 720;
+var crop = { img: null, scale: 1, minScale: 1, x: 0, y: 0, drag: null };
+function openCropModal(file){
+  var r = new FileReader();
+  r.onload = function(){
+    var img = new Image();
+    img.onload = function(){
+      crop.img = img;
+      showModal('crop-modal');
+      requestAnimationFrame(function(){ fitCrop(); });
+    };
+    img.src = r.result;
+  };
+  r.readAsDataURL(file);
+}
+function cropViewportEl(){ return document.getElementById('crop-viewport'); }
+function fitCrop(){
+  var vp = cropViewportEl(); if(!vp || !crop.img) return;
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var base = Math.max(vw / crop.img.width, vh / crop.img.height);
+  crop.minScale = base;
+  crop.scale = base;
+  crop.x = (vw - crop.img.width * base) / 2;
+  crop.y = (vh - crop.img.height * base) / 2;
+  syncZoomRange();
+  drawCrop();
+}
+function clampCrop(){
+  var vp = cropViewportEl(); if(!vp || !crop.img) return;
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var iw = crop.img.width * crop.scale, ih = crop.img.height * crop.scale;
+  if(iw <= vw){ crop.x = (vw - iw) / 2; } else { crop.x = Math.min(0, Math.max(vw - iw, crop.x)); }
+  if(ih <= vh){ crop.y = (vh - ih) / 2; } else { crop.y = Math.min(0, Math.max(vh - ih, crop.y)); }
+}
+function drawCrop(){
+  var vp = cropViewportEl(); if(!vp) return;
+  var c = document.getElementById('crop-canvas'); if(!c) return;
+  clampCrop();
+  c.width = vp.clientWidth; c.height = vp.clientHeight;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, c.width, c.height);
+  if(crop.img) ctx.drawImage(crop.img, crop.x, crop.y, crop.img.width * crop.scale, crop.img.height * crop.scale);
+}
+function syncZoomRange(){
+  var r = document.getElementById('crop-zoom-range'); if(!r || !crop.minScale) return;
+  r.value = Math.round(Math.min(100, Math.max(0, (crop.scale / crop.minScale - 1) / 5 * 100)));
+}
+function cropZoom(dir){
+  if(!crop.img) return;
+  var ns = Math.min(Math.max(crop.scale * (dir > 0 ? 1.15 : 0.87), crop.minScale), crop.minScale * 6);
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var k = ns / crop.scale;
+  crop.x = vw / 2 - (vw / 2 - crop.x) * k;
+  crop.y = vh / 2 - (vh / 2 - crop.y) * k;
+  crop.scale = ns;
+  syncZoomRange();
+  drawCrop();
+}
+function zoomFromRange(v){
+  if(!crop.img || !crop.minScale) return;
+  var ns = Math.min(Math.max(crop.minScale * (1 + (Number(v) || 0) / 100 * 5), crop.minScale), crop.minScale * 6);
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var k = ns / crop.scale;
+  crop.x = vw / 2 - (vw / 2 - crop.x) * k;
+  crop.y = vh / 2 - (vh / 2 - crop.y) * k;
+  crop.scale = ns;
+  drawCrop();
+}
+function applyCrop(){
+  if(!crop.img) return;
+  var vp = cropViewportEl();
+  var vw = vp.clientWidth, vh = vp.clientHeight;
+  var c = document.createElement('canvas');
+  c.width = CROP_OUT_W; c.height = CROP_OUT_H;
+  var ctx = c.getContext('2d');
+  var sx = (0 - crop.x) / crop.scale, sy = (0 - crop.y) / crop.scale;
+  var sw = vw / crop.scale, sh = vh / crop.scale;
+  ctx.drawImage(crop.img, sx, sy, sw, sh, 0, 0, CROP_OUT_W, CROP_OUT_H);
+  formImageData = c.toDataURL('image/jpeg', 0.82);
+  var pv = document.getElementById('form-tournament-preview');
+  pv.src = formImageData; pv.classList.remove('hidden');
+  document.getElementById('form-tournament-placeholder').classList.add('hidden');
+  hideModal('crop-modal');
+  toast('Thumbnail cropped \u2713 (1280x720)','crop');
+}
+(function(){
+  var vp = document.getElementById('crop-viewport'); if(!vp) return;
+  var st = null;
+  vp.addEventListener('pointerdown', function(e){ if(!crop.img) return; st = { px: e.clientX, py: e.clientY, x: crop.x, y: crop.y }; try{ vp.setPointerCapture(e.pointerId); }catch(err){} e.preventDefault(); });
+  vp.addEventListener('pointermove', function(e){ if(!st) return; crop.x = st.x + (e.clientX - st.px); crop.y = st.y + (e.clientY - st.py); drawCrop(); });
+  vp.addEventListener('pointerup', function(){ st = null; });
+  vp.addEventListener('pointercancel', function(){ st = null; });
+  vp.addEventListener('wheel', function(e){ e.preventDefault(); cropZoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  window.addEventListener('resize', function(){ if(crop.img && !document.getElementById('crop-modal').classList.contains('hidden')) fitCrop(); });
+})();
 </script>
 </body>
 </html>
